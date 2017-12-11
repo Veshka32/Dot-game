@@ -13,7 +13,8 @@ public class DotsGameWindow extends JFrame {
     private Container cp = getContentPane(); ///top-level container
     private JPanel drawArea = new JPanel();
     private JButton changeColor = new JButton("Switch color");
-    private JButton drawPolygon = new JButton("Polygon");
+    private JButton drawPolygon = new JButton("Draw polygon");
+    private JButton endGame=new JButton("End game");
     int redDotCount;
     int blueDotCount;
     private JLabel redDots = new JLabel("Red " + redDotCount);
@@ -32,12 +33,18 @@ public class DotsGameWindow extends JFrame {
 
     State state = State.DRAW_DOT;
     public enum State {
-        DRAW_DOT, DRAW_POLYGON
+        DRAW_DOT, DRAW_POLYGON,END_GAME
     }
 
-
     public DotsGameWindow() {
+        setMenu();
         cp.setLayout(new BorderLayout()); //default arrange components
+        endGame.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showEndGamePanel();
+            }
+        });
         changeColor.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -51,10 +58,6 @@ public class DotsGameWindow extends JFrame {
                 state = State.DRAW_POLYGON;
             }
         });
-        drawArea.add(redDots);
-        drawArea.add(changeColor);
-        drawArea.add(drawPolygon);
-        drawArea.add(blueDots);
         changeColor.setBackground(Color.RED);
         drawArea.addMouseListener(new MouseAdapter() {
             @Override
@@ -92,7 +95,7 @@ public class DotsGameWindow extends JFrame {
         });
 
         setResizable(false);
-        drawArea.setPreferredSize(new Dimension(DotGameConstant.gridCellSize * (DotGameConstant.dimension - 1), DotGameConstant.gridCellSize * (DotGameConstant.dimension - 1)));
+        drawArea.setPreferredSize(new Dimension(cellSize * (DotGameConstant.dimension - 1), cellSize * (DotGameConstant.dimension - 1)));
         drawArea.setBackground(Color.WHITE);
         add(drawArea);
         setTitle("Dots Game");
@@ -102,6 +105,40 @@ public class DotsGameWindow extends JFrame {
         revalidate();
         canvas = cp.getGraphics(); //getGraphics must be called only after at least one rendering
         canvas.setColor(currentColor);
+    }
+
+    public void setMenu(){
+        JMenuBar menu=new JMenuBar();
+        menu.add(changeColor);
+        menu.add(new JMenu("   "));
+        menu.add(drawPolygon);
+        menu.add(new JMenu("   "));
+        menu.add(redDots);
+        menu.add(new JMenu("   "));
+        menu.add(blueDots);
+        menu.add(new JMenu("   "));
+        menu.add(endGame);
+        setJMenuBar(menu);
+    }
+
+    public void showEndGamePanel(){
+        String winner;
+        if (redDotCount>blueDotCount) winner="RED wins!";
+        else if (blueDotCount>redDotCount) winner="BLUE wins!";
+        else winner="Ничья";
+        Object[] options = {"New Game",
+                "Exit"};
+        int n = JOptionPane.showOptionDialog(this,
+                winner,
+                "",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,     //do not use a custom Icon
+                options,  //the titles of buttons
+                options[0]); //default button title
+        if (n==0) {dispose();
+            new DotsGameWindow();}
+        else dispose();
     }
 
     public boolean isHereDot(int col, int row) {
@@ -116,6 +153,7 @@ public class DotsGameWindow extends JFrame {
         canvas.setColor(currentColor);
         segmentsX.clear();
         segmentsY.clear();
+        state = State.DRAW_DOT;
     }
 
     public void drawSegment(int x, int y) {
