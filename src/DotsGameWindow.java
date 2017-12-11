@@ -32,7 +32,7 @@ public class DotsGameWindow extends JFrame {
 
     State state = State.DRAW_DOT;
     public enum State {
-        DRAW_DOT, DRAW_POLYGON;
+        DRAW_DOT, DRAW_POLYGON
     }
 
 
@@ -198,9 +198,5 @@ public class DotsGameWindow extends JFrame {
 
     public boolean isValidDist(int x1, int y1, int x2, int y2) {
         return Math.abs(x1 - x2) / cellSize < 2 && Math.abs(y1 - y2) / cellSize < 2;
-    }
-
-    public static void main(String[] args) {
-        DotsGameWindow test = new DotsGameWindow();
     }
 }
