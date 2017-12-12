@@ -12,11 +12,11 @@ public class DotsGameWindow extends JFrame {
     int cellSize=DotGameConstant.gridCellSize;
     private Container cp = getContentPane(); ///top-level container
     private JPanel drawArea = new JPanel();
-    private JButton changeColor = new JButton("Switch color");
+    private JButton draw_dot = new JButton("Draw dot");
     private JButton drawPolygon = new JButton("Draw polygon");
+    private JButton changeColor=new JButton("Switch color");
     private JButton endGame=new JButton("End game");
-    int redDotCount;
-    int blueDotCount;
+    int redDotCount,blueDotCount;
     private JLabel redDots = new JLabel("Red " + redDotCount);
     private JLabel blueDots = new JLabel("Blue " + blueDotCount);
     private Color currentColor = DotGameConstant.RED;
@@ -33,7 +33,7 @@ public class DotsGameWindow extends JFrame {
 
     State state = State.DRAW_DOT;
     public enum State {
-        DRAW_DOT, DRAW_POLYGON,END_GAME
+        DRAW_DOT, DRAW_POLYGON
     }
 
     public DotsGameWindow() {
@@ -45,17 +45,25 @@ public class DotsGameWindow extends JFrame {
                 showEndGamePanel();
             }
         });
-        changeColor.addActionListener(new ActionListener() {
+        draw_dot.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                changeCurrentColor();
-                if (segmentsX.size() > 0) eraseSegments();
+                state=State.DRAW_DOT;
+                eraseSegments();
             }
         });
         drawPolygon.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                eraseSegments();
                 state = State.DRAW_POLYGON;
+            }
+        });
+
+        changeColor.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                changeCurrentColor();
             }
         });
         changeColor.setBackground(Color.RED);
@@ -67,7 +75,8 @@ public class DotsGameWindow extends JFrame {
                 switch (state) {
                     case DRAW_DOT:
                         if (isHereDot(x / cellSize, y / cellSize)) return;
-                        putDot(x / cellSize, y / cellSize); //to constant
+                        putDot(x / cellSize, y / cellSize);
+                        changeCurrentColor();
                         break;
                     case DRAW_POLYGON:
                         if (!isHereDot(x / cellSize, y / cellSize) || getDotColor(x / cellSize, y / cellSize) != currentColor) return;
@@ -109,6 +118,8 @@ public class DotsGameWindow extends JFrame {
 
     public void setMenu(){
         JMenuBar menu=new JMenuBar();
+        menu.add(draw_dot);
+        menu.add(new JMenu("   "));
         menu.add(changeColor);
         menu.add(new JMenu("   "));
         menu.add(drawPolygon);
@@ -146,14 +157,14 @@ public class DotsGameWindow extends JFrame {
     }
 
     public void eraseSegments() {
-        for (int i = 0; i < segmentsX.size() - 1; i++) {
+        if (segmentsX.isEmpty()) return;
+            for (int i = 0; i < segmentsX.size() - 1; i++) {
             canvas.setColor(Color.WHITE);
             canvas.drawLine(segmentsX.get(i), segmentsY.get(i), segmentsX.get(i + 1), segmentsY.get(i + 1));
         }
         canvas.setColor(currentColor);
         segmentsX.clear();
         segmentsY.clear();
-        state = State.DRAW_DOT;
     }
 
     public void drawSegment(int x, int y) {
@@ -162,18 +173,19 @@ public class DotsGameWindow extends JFrame {
         drawnLineCount++;
         xx.add(x);
         yy.add(y);
+        segmentsX.add(x);
+        segmentsY.add(y);
         if (x == polygonXstart && y == polygonYstart) closePolygon();
         else {
             prevX = x;
             prevY = y;
-            segmentsX.add(x);
-            segmentsY.add(y);
         }
     }
 
     public void closePolygon() {
         state = State.DRAW_DOT;
-        drawnLineCount = 0;
+        if (drawnLineCount<4) eraseSegments();
+        else {
         int minCol = xx.first() / cellSize;
         int maxCol = xx.last() / cellSize;
         int minRow = yy.first() / cellSize;
@@ -185,7 +197,8 @@ public class DotsGameWindow extends JFrame {
                     putDot(col, row);
                 }
             }
-        }
+        }}
+        drawnLineCount = 0;
         xx.clear();
         yy.clear();
         segmentsX.clear();
