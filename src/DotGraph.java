@@ -1,3 +1,4 @@
+import edu.princeton.cs.algs4.BreadthFirstPaths;
 import edu.princeton.cs.algs4.Digraph;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class DotGraph {
         return E;
     }
 
-    public void addDot(int d){
+    public void addDot(){
         V++;
     }
 
