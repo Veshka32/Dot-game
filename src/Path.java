@@ -4,9 +4,11 @@ public class Path {
     int hash;
     final int[] path;
 
-    public Path(int[] array,int hash){ //use new array and hash of previous array
-     path=array;
-     this.hash=hash^path[path.length-1]*397;
+    public Path(Path p,int last){ //path=array+last
+     path=new int[p.size()+1];
+     System.arraycopy(p.path,0,path,0,p.size());
+     path[path.length-1]=last;
+     this.hash=p.hashCode()^last*397;
     }
 
     public Path(int[] array){
@@ -17,6 +19,25 @@ public class Path {
 
     public String toString(){
         return Arrays.toString(path);
+    }
+
+    public int size(){
+        return path.length;
+    }
+
+    public int start(){
+        return path[0];
+    }
+
+    public int last(){
+        return path[path.length-1];
+    }
+
+    public boolean contains(int a){
+        for (int i:path){
+            if (i==a) return true;
+        }
+        return false;
     }
 
     @Override

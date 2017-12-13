@@ -38,36 +38,28 @@ public class DotGraph {
     }
 
     public void findAllCycles() {
-        ArrayDeque<int[]> paths = new ArrayDeque<>();
-        for (int i = 0; i < adj.length; i++) {
-            paths.add(new int[]{i});
+        ArrayDeque<Path> paths = new ArrayDeque<>();
+        for (int i = 1; i < adj.length; i++) {
+            paths.add(new Path(new int[]{i}));
             while (!paths.isEmpty()) {
-                int[] path = paths.pop();
-                for (int w : getAdjacent(path[path.length - 1])) {
-                    if (path.length >1) {
-                        if (w == path[0] && path.length > 3) {
+                Path path = paths.pop();
+                for (int w : getAdjacent(path.last())){
+                    if (path.size() >1) {
+                        if (w == path.start() && path.size() > 3) {
                             addCycle(path); continue;
                         }
-                        if (contains(path,w)) continue;
+                        if (path.contains(w)) continue;
                     }
-                    int[] newPath = new int[path.length + 1];
-                    System.arraycopy(path, 0, newPath, 0, path.length);
-                    newPath[path.length] = w;
+                    Path newPath = new Path(path,w);
                     paths.add(newPath);
                 }
             }
         }
     }
 
-    public boolean contains(int[] array,int a){
-        for (Integer i:array){
-            if (i==a) return true;
-        }
-        return false;
-    }
 
-    public void addCycle(int[] path) {
-        Path p=new Path(path);
+
+    public void addCycle(Path p) {
         if (!cycles.contains(p)) cycles.add(p);
     }
 
