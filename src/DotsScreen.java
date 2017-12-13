@@ -15,7 +15,7 @@ public class DotsScreen extends JFrame{
     private Color currentColor = DotGameConstant.RED;
 
     Dot[][] dots = new Dot[DotGameConstant.dimension][DotGameConstant.dimension];
-    DotGraph connections=new DotGraph();
+    DotGraph connections=new DotGraph(DotGameConstant.dimension*DotGameConstant.dimension);
 
     public DotsScreen() {
         setMenu();
