@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -14,7 +12,6 @@ class DotsScreen extends JFrame {
     private JLabel redDots = new JLabel("Red " + redDotCount);
     private JLabel blueDots = new JLabel("Blue " + blueDotCount);
     private Color currentColor = DotGameConstant.RED;
-
     private Dot[][] dots = new Dot[DotGameConstant.dimension][DotGameConstant.dimension];
     private DotGraph connections = new DotGraph(DotGameConstant.dimension * DotGameConstant.dimension, dots);
 
@@ -78,12 +75,12 @@ class DotsScreen extends JFrame {
     }
 
     private void putDot(int col, int row) {
-        int id = col + row * DotGameConstant.dimension;
+        int id = getPointNumber(col, row);
         dots[col][row] = new Dot(id, col, row, currentColor);
         connections.addDot();
         addConnections(col, row);
         drawArea.addDotsForDraw(dots[col][row]);
-        CaptureResult result = connections.findNewCycle(getPointNumber(col, row));
+        CaptureResult result = connections.findNewCycle(id);
         if (result.size() > 0) {
             if (result.getColor() == Color.RED) redDotCount += result.size();
             else blueDotCount += result.size();
@@ -97,15 +94,15 @@ class DotsScreen extends JFrame {
     }
 
     private void addConnections(int col, int row) {
-        int n = getPointNumber(col, row);
-        int[] surrounded = {(0 - dim), dim, -1, 1, (-1 - dim), (1 - dim), (dim - 1), (dim + 1)};
-        for (int i : surrounded) {
-            int m = n + i;
-            try {
-                Dot dot = dots[m % dim][m / dim];
-                if (dot != null && dot.isAvailable && dot.getColor() == currentColor)
-                    connections.addEdge(dots[col][row].id(), dot.id());
-            } catch (IndexOutOfBoundsException e) {
+        for (int i = -1; i < 2; i++) {
+            for (int j = -1; j < 2; j++) {
+                if (i == 0 && j == 0) continue;
+                try {
+                    Dot dot = dots[col + i][row + j];
+                    if (dot != null && dot.isAvailable && dot.getColor() == currentColor)
+                        connections.addEdge(dots[col][row].id(), dot.id());
+                } catch (IndexOutOfBoundsException e) {
+                }
             }
         }
     }

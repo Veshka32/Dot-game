@@ -26,14 +26,6 @@ public class DotGraph {
         }
     }
 
-    public int vertexCount() {
-        return V;
-    }
-
-    public int edgeCount() {
-        return E;
-    }
-
     void addDot() {
         V++;
     }

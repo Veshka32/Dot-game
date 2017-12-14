@@ -5,27 +5,42 @@ public class Dot {
     int x;
     int y;
     Color color;
-    boolean isAvailable=true;
+    boolean isAvailable = true;
 
-    public Dot(int id,int col,int row,Color color){
-        this.id=id;
-        this.x=col*DotGameConstant.gridCellSize;
-        this.y=row*DotGameConstant.gridCellSize;
-        this.color=color;
+    public Dot(int id, int col, int row, Color color) {
+        this.id = id;
+        this.x = col * DotGameConstant.gridCellSize;
+        this.y = row * DotGameConstant.gridCellSize;
+        this.color = color;
     }
 
-    public void draw(Graphics g){
+    public void draw(Graphics g) {
         g.setColor(color);
         g.fillOval(x - DotGameConstant.dotSize / 2, y - DotGameConstant.dotSize / 2, DotGameConstant.dotSize, DotGameConstant.dotSize);
-        g.drawString(""+id,x,y);
+        g.drawString("" + id, x, y);
     }
 
-    public Color getColor(){return color;}
-    public boolean isAvailable(){return isAvailable;}
-    public void disable(){isAvailable=false;}
-    public int getX(){return x;}
+    public Color getColor() {
+        return color;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void disable() {
+        isAvailable = false;
+    }
+
+    public int getX() {
+        return x;
+    }
+
     public int getY() {
         return y;
     }
-    public int id(){return id;}
+
+    public int id() {
+        return id;
+    }
 }

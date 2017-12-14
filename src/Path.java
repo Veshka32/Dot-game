@@ -1,11 +1,10 @@
 import java.awt.*;
 import java.util.Arrays;
 
-public class Path  {
+public class Path {
     private int hash;
     private final int[] path;
     private Color color;
-
 
     Path(Path p, int last) { //path=array+last
         path = new int[p.size() + 1];
@@ -20,11 +19,11 @@ public class Path  {
             hash = hash ^ i * 397;
     }
 
-    void setColor(Color color){
-        this.color=color;
+    void setColor(Color color) {
+        this.color = color;
     }
 
-    Color getColor(){
+    Color getColor() {
         return color;
     }
 
@@ -67,7 +66,6 @@ public class Path  {
         return new int[]{ys[0], ys[ys.length - 1]};
     }
 
-
     void draw(Graphics g) {
         g.setColor(color);
         int x, y;
@@ -89,7 +87,6 @@ public class Path  {
     public int hashCode() {
         return hash;
     }
-
 
     @Override
     public boolean equals(Object obj) {
