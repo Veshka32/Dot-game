@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public class Dot {
+public class Dot implements Drawable {
     int id;
     int x;
     int y;
@@ -14,6 +14,7 @@ public class Dot {
         this.color = color;
     }
 
+    @Override
     public void draw(Graphics g) {
         g.setColor(color);
         g.fillOval(x - DotGameConstant.dotSize / 2, y - DotGameConstant.dotSize / 2, DotGameConstant.dotSize, DotGameConstant.dotSize);

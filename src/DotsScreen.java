@@ -70,23 +70,19 @@ class DotsScreen extends JFrame {
         } else dispose();
     }
 
-    private int getPointNumber(int col, int row) {
-        return col + row * dim;
-    }
-
     private void putDot(int col, int row) {
-        int id = getPointNumber(col, row);
+        int id = col + row * dim;
         dots[col][row] = new Dot(id, col, row, currentColor);
         connections.addDot();
         addConnections(col, row);
-        drawArea.addDotsForDraw(dots[col][row]);
+        drawArea.addObjectForDraw(dots[col][row]);
         CaptureResult result = connections.findNewCycle(id);
         if (result.size() > 0) {
             if (result.getColor() == Color.RED) redDotCount += result.size();
             else blueDotCount += result.size();
         }
         for (Path p : connections.getCycles()) {
-            drawArea.addPathForDraw(p);
+            drawArea.addObjectForDraw(p);
         }
         updateLabels();
         repaint();

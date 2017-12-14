@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.util.Arrays;
 
-public class Path {
+public class Path implements Drawable{
     private int hash;
     private final int[] path;
     private Color color;
@@ -66,7 +66,8 @@ public class Path {
         return new int[]{ys[0], ys[ys.length - 1]};
     }
 
-    void draw(Graphics g) {
+    @Override
+    public void draw(Graphics g) {
         g.setColor(color);
         int x, y;
         int x1 = 0;
