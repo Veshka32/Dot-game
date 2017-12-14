@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.Arrays;
 
 public class Path {
@@ -38,6 +39,22 @@ public class Path {
             if (i==a) return true;
         }
         return false;
+    }
+
+    public void draw(Graphics g){
+        int x,y;
+        int x1=0;
+        int y1=0;
+        for (int i=0; i<path.length-1;i++){
+            x=path[i]%DotGameConstant.dimension*DotGameConstant.gridCellSize;
+            y=path[i]/DotGameConstant.dimension*DotGameConstant.gridCellSize;
+            x1=path[i+1]%DotGameConstant.dimension*DotGameConstant.gridCellSize;
+            y1=path[i+1]/DotGameConstant.dimension*DotGameConstant.gridCellSize;
+            g.drawLine(x,y,x1,y1);
+        }
+        x=path[0]%DotGameConstant.dimension*DotGameConstant.gridCellSize;
+        y=path[0]/DotGameConstant.dimension*DotGameConstant.gridCellSize;
+        g.drawLine(x,y,x1,y1);
     }
 
     @Override

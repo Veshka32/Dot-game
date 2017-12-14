@@ -11,7 +11,7 @@ public class DotGraph {
         total = V;
         adj = new ArrayList[total];
         for (int i = 0; i < total; i++) {
-            adj[i] = new ArrayList<Integer>();
+            adj[i] = new ArrayList<>();
         }
     }
 
@@ -37,27 +37,39 @@ public class DotGraph {
         return adj[v];
     }
 
-    public void findAllCycles() {
+    public void findAllCycles(int v) {
         ArrayDeque<Path> paths = new ArrayDeque<>();
-        for (int i = 1; i < adj.length; i++) {
-            paths.add(new Path(new int[]{i}));
-            while (!paths.isEmpty()) {
-                Path path = paths.pop();
-                for (int w : getAdjacent(path.last())){
-                    if (path.size() >1) {
-                        if (w == path.start() && path.size() > 3) {
-                            addCycle(path); continue;
-                        }
-                        if (path.contains(w)) continue;
-                    }
-                    Path newPath = new Path(path,w);
-                    paths.add(newPath);
+        paths.add(new Path(new int[]{v}));
+        while (!paths.isEmpty()) {
+            Path path = paths.pop();
+            int last=path.last();
+            List<Integer> adj=getAdjacent(last);
+            Collections.sort(adj, new Comparator<Integer>() {
+                @Override
+                public int compare(Integer o1, Integer o2) {
+                    if (manhattanDist(last, o1) < manhattanDist(last, o2)) return -1;
+                    else if (manhattanDist(last, o1) > manhattanDist(last, o2)) return 1;
+                    else return 0;
                 }
+            });
+            for (int w : adj) {
+                if (path.size() > 1) {
+                    if (w == path.start() && path.size() > 3) {
+                        addCycle(path);
+                        continue;
+                    }
+                    if (path.contains(w)) continue;
+                }
+                Path newPath = new Path(path, w);
+                paths.add(newPath);
             }
         }
     }
 
 
+    public Iterable<Path> getCycles() {
+        return cycles;
+    }
 
     public void addCycle(Path p) {
         if (!cycles.contains(p)) cycles.add(p);
@@ -76,5 +88,13 @@ public class DotGraph {
 //        path = normalized;
 //    }
 
+
+    public static int manhattanDist(int a, int b) {
+        int col = a % DotGameConstant.dimension;
+        int row = a / DotGameConstant.dimension;
+        int col2 = b % DotGameConstant.dimension;
+        int row2 = b / DotGameConstant.dimension;
+        return Math.abs(col - col2) + Math.abs(row - row2);
+    }
 
 }
