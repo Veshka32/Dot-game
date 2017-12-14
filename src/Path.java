@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.util.Arrays;
 
-public class Path {
+public class Path implements Comparable<Path>{
     int hash;
     final int[] path;
 
@@ -70,5 +70,10 @@ public class Path {
         if (obj.getClass() != this.getClass()) return false;
         Path that = (Path) obj;
         return hash==that.hashCode();
+    }
+
+    @Override
+    public int compareTo(Path o) {
+        return Integer.compare(this.size(),o.size());
     }
 }

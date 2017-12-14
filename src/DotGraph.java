@@ -38,10 +38,13 @@ public class DotGraph {
     }
 
     public void findAllCycles(int v) {
+        if (V<4) return;
+        HashSet<Path> newCycles = new HashSet<>();
         ArrayDeque<Path> paths = new ArrayDeque<>();
         paths.add(new Path(new int[]{v}));
         while (!paths.isEmpty()) {
             Path path = paths.pop();
+            if (newCycles.contains(path)) continue;
             int last=path.last();
             List<Integer> adj=getAdjacent(last);
             Collections.sort(adj, new Comparator<Integer>() {
@@ -54,8 +57,8 @@ public class DotGraph {
             });
             for (int w : adj) {
                 if (path.size() > 1) {
-                    if (w == path.start() && path.size() > 3) {
-                        addCycle(path);
+                    if (w == path.start() && path.size() > 3 && !newCycles.contains(path)) {
+                        newCycles.add(path);
                         continue;
                     }
                     if (path.contains(w)) continue;
@@ -64,6 +67,13 @@ public class DotGraph {
                 paths.add(newPath);
             }
         }
+        if (newCycles.isEmpty()) return;
+        Path[] cyclesForSort= new Path[newCycles.size()];
+        int i=0;
+        for (Path p:newCycles)
+            cyclesForSort[i++]=p;
+        Arrays.sort(cyclesForSort);
+        cycles.add(cyclesForSort[cyclesForSort.length-1]);
     }
 
 
@@ -71,9 +81,6 @@ public class DotGraph {
         return cycles;
     }
 
-    public void addCycle(Path p) {
-        if (!cycles.contains(p)) cycles.add(p);
-    }
 
 //    public void normalizeCycle(int[] path) {
 //        int indexOfMin = 0;

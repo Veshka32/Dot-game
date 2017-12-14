@@ -91,7 +91,7 @@ public class DotsScreen extends JFrame {
         if (currentColor == DotGameConstant.RED) redDotCount++;
         else blueDotCount++;
         updateLabels();
-        //changeCurrentColor();
+        changeCurrentColor();
         connections.findAllCycles(getPointNumber(col,row));
         for (Path p : connections.getCycles()) {
             drawArea.addPathForDraw(p);
