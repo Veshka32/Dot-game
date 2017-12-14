@@ -16,7 +16,7 @@ public class DotsScreen extends JFrame {
     public Color currentColor = DotGameConstant.RED;
 
     Dot[][] dots = new Dot[DotGameConstant.dimension][DotGameConstant.dimension];
-    DotGraph connections = new DotGraph(DotGameConstant.dimension * DotGameConstant.dimension);
+    DotGraph connections = new DotGraph(DotGameConstant.dimension * DotGameConstant.dimension,dots);
 
     public DotsScreen() {
         setMenu();
@@ -92,7 +92,7 @@ public class DotsScreen extends JFrame {
         else blueDotCount++;
         updateLabels();
         changeCurrentColor();
-        connections.findAllCycles(getPointNumber(col,row));
+        connections.findNewCycle(getPointNumber(col,row));
         for (Path p : connections.getCycles()) {
             drawArea.addPathForDraw(p);
         }

@@ -6,6 +6,16 @@ public class DotGraph {
     HashSet<Path> cycles = new HashSet<>();
     int V = 0; //current vertex count
     int E = 0;
+    Dot[][] dots;
+
+    public DotGraph(int V,Dot[][] dots) {
+        total = V;
+        adj = new ArrayList[total];
+        for (int i = 0; i < total; i++) {
+            adj[i] = new ArrayList<>();
+        }
+        this.dots=dots;
+    }
 
     public DotGraph(int V) {
         total = V;
@@ -27,6 +37,16 @@ public class DotGraph {
         V++;
     }
 
+    public void disableDot(int v){
+        int col=v%DotGameConstant.dimension;
+        int row=v/DotGameConstant.dimension;
+        for (int i:adj[v]){
+            adj[i].remove((Integer)v);
+        }
+        adj[v].clear();
+        if (dots!=null) dots[col][row].disable();
+    }
+
     public void addEdge(int v, int w) {
         adj[v].add(w);
         adj[w].add(v);
@@ -37,7 +57,7 @@ public class DotGraph {
         return adj[v];
     }
 
-    public void findAllCycles(int v) {
+    public void findNewCycle(int v) {
         if (V<4) return;
         HashSet<Path> newCycles = new HashSet<>();
         ArrayDeque<Path> paths = new ArrayDeque<>();
@@ -80,20 +100,6 @@ public class DotGraph {
     public Iterable<Path> getCycles() {
         return cycles;
     }
-
-
-//    public void normalizeCycle(int[] path) {
-//        int indexOfMin = 0;
-//        for (int i = 0; i < path.length; i++) {
-//            if (path[i] < path[indexOfMin])
-//                indexOfMin = i;
-//        }
-//
-//        int[] normalized = new int[path.length];
-//        System.arraycopy(path, 0, normalized, indexOfMin, path.length - indexOfMin);
-//        System.arraycopy(path, path.length - indexOfMin, normalized, 0, indexOfMin);
-//        path = normalized;
-//    }
 
 
     public static int manhattanDist(int a, int b) {

@@ -22,6 +22,7 @@ public class Dot {
 
     public Color getColor(){return color;}
     public boolean isAvailable(){return isAvailable;}
+    public void disable(){isAvailable=false;}
     public int getX(){return x;}
     public int getY() {
         return y;
