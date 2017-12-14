@@ -1,15 +1,15 @@
 import java.awt.*;
 
-class Captured {
+class CaptureResult {
     private Color color=null;
     private int count=0;
 
-    Captured(Color color, int count){
+    CaptureResult(Color color, int count){
         this.color=color;
         this.count=count;
     }
 
-    Captured(){}
+    CaptureResult(){}
 
     int size(){
         return count;

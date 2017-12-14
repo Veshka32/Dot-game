@@ -20,12 +20,7 @@ class DotsScreen extends JFrame {
 
     DotsScreen() {
         setMenu();
-        endGame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showEndGamePanel();
-            }
-        });
+        endGame.addActionListener(e -> showEndGamePanel());
         changeColor.setBackground(Color.RED);
         add(drawArea);
         drawArea.addMouseListener(new MouseAdapter() {
@@ -88,7 +83,7 @@ class DotsScreen extends JFrame {
         connections.addDot();
         addConnections(col, row);
         drawArea.addDotsForDraw(dots[col][row]);
-        Captured result = connections.findNewCycle(getPointNumber(col, row));
+        CaptureResult result = connections.findNewCycle(getPointNumber(col, row));
         if (result.size() > 0) {
             if (result.getColor() == Color.RED) redDotCount += result.size();
             else blueDotCount += result.size();
