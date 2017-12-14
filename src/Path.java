@@ -1,64 +1,92 @@
 import java.awt.*;
 import java.util.Arrays;
 
-public class Path implements Comparable<Path>{
-    int hash;
-    final int[] path;
+public class Path implements Comparable<Path> {
+    private int hash;
+    private final int[] path;
+    private Color color;
 
-    public Path(Path p,int last){ //path=array+last
-     path=new int[p.size()+1];
-     System.arraycopy(p.path,0,path,0,p.size());
-     path[path.length-1]=last;
-     this.hash=p.hashCode()^last*397;
+
+    Path(Path p, int last) { //path=array+last
+        path = new int[p.size() + 1];
+        System.arraycopy(p.path, 0, path, 0, p.size());
+        path[path.length - 1] = last;
+        this.hash = p.hashCode() ^ last * 397;
     }
 
-    public Path(int[] array){
-        path=array;
-        for (int i:path)
-            hash=hash^i*397;
+    Path(int[] array) {
+        path = array;
+        for (int i : path)
+            hash = hash ^ i * 397;
     }
 
-    public String toString(){
+    void setColor(Color color){
+        this.color=color;
+    }
+
+    Color getColor(){
+        return color;
+    }
+
+    public String toString() {
         return Arrays.toString(path);
     }
 
-    public int size(){
+    int size() {
         return path.length;
     }
 
-    public int start(){
+    int start() {
         return path[0];
     }
 
-    public int last(){
-        return path[path.length-1];
+    int last() {
+        return path[path.length - 1];
     }
 
-    public boolean contains(int a){
-        for (int i:path){
-            if (i==a) return true;
+    boolean contains(int a) {
+        for (int i : path) {
+            if (i == a) return true;
         }
         return false;
     }
 
-    public void draw(Graphics g){
-        int x,y;
-        int x1=0;
-        int y1=0;
-        for (int i=0; i<path.length-1;i++){
-            x=path[i]%DotGameConstant.dimension*DotGameConstant.gridCellSize;
-            y=path[i]/DotGameConstant.dimension*DotGameConstant.gridCellSize;
-            x1=path[i+1]%DotGameConstant.dimension*DotGameConstant.gridCellSize;
-            y1=path[i+1]/DotGameConstant.dimension*DotGameConstant.gridCellSize;
-            g.drawLine(x,y,x1,y1);
+    int[] limitX() {
+        int[] xs = new int[path.length];
+        for (int i = 0; i < path.length; i++)
+            xs[i] = path[i] % DotGameConstant.dimension;
+        Arrays.sort(xs);
+        return new int[]{xs[0], xs[xs.length - 1]};
+    }
+
+    int[] limitY() {
+        int[] ys = new int[path.length];
+        for (int i = 0; i < path.length; i++)
+            ys[i] = path[i] / DotGameConstant.dimension;
+        Arrays.sort(ys);
+        return new int[]{ys[0], ys[ys.length - 1]};
+    }
+
+
+    void draw(Graphics g) {
+        g.setColor(color);
+        int x, y;
+        int x1 = 0;
+        int y1 = 0;
+        for (int i = 0; i < path.length - 1; i++) {
+            x = path[i] % DotGameConstant.dimension * DotGameConstant.gridCellSize;
+            y = path[i] / DotGameConstant.dimension * DotGameConstant.gridCellSize;
+            x1 = path[i + 1] % DotGameConstant.dimension * DotGameConstant.gridCellSize;
+            y1 = path[i + 1] / DotGameConstant.dimension * DotGameConstant.gridCellSize;
+            g.drawLine(x, y, x1, y1);
         }
-        x=path[0]%DotGameConstant.dimension*DotGameConstant.gridCellSize;
-        y=path[0]/DotGameConstant.dimension*DotGameConstant.gridCellSize;
-        g.drawLine(x,y,x1,y1);
+        x = path[0] % DotGameConstant.dimension * DotGameConstant.gridCellSize;
+        y = path[0] / DotGameConstant.dimension * DotGameConstant.gridCellSize;
+        g.drawLine(x, y, x1, y1);
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return hash;
     }
 
@@ -69,11 +97,11 @@ public class Path implements Comparable<Path>{
         if (obj == null) return false;
         if (obj.getClass() != this.getClass()) return false;
         Path that = (Path) obj;
-        return hash==that.hashCode();
+        return hash == that.hashCode();
     }
 
     @Override
     public int compareTo(Path o) {
-        return Integer.compare(this.size(),o.size());
+        return Integer.compare(this.size(), o.size());
     }
 }

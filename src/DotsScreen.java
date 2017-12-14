@@ -5,20 +5,20 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class DotsScreen extends JFrame {
+class DotsScreen extends JFrame {
     private DotGamePanel drawArea = new DotGamePanel();
     private JButton changeColor = new JButton("Switch color");
     private JButton endGame = new JButton("End game");
-    int redDotCount, blueDotCount;
-    int dim = DotGameConstant.dimension;
+    private int redDotCount, blueDotCount;
+    private int dim = DotGameConstant.dimension;
     private JLabel redDots = new JLabel("Red " + redDotCount);
     private JLabel blueDots = new JLabel("Blue " + blueDotCount);
-    public Color currentColor = DotGameConstant.RED;
+    private Color currentColor = DotGameConstant.RED;
 
-    Dot[][] dots = new Dot[DotGameConstant.dimension][DotGameConstant.dimension];
-    DotGraph connections = new DotGraph(DotGameConstant.dimension * DotGameConstant.dimension,dots);
+    private Dot[][] dots = new Dot[DotGameConstant.dimension][DotGameConstant.dimension];
+    private DotGraph connections = new DotGraph(DotGameConstant.dimension * DotGameConstant.dimension, dots);
 
-    public DotsScreen() {
+    DotsScreen() {
         setMenu();
         endGame.addActionListener(new ActionListener() {
             @Override
@@ -45,7 +45,7 @@ public class DotsScreen extends JFrame {
         revalidate();
     }
 
-    public void setMenu() {
+    private void setMenu() {
         JMenuBar menu = new JMenuBar();
         menu.add(changeColor);
         menu.add(new JMenu("   "));
@@ -57,7 +57,7 @@ public class DotsScreen extends JFrame {
         setJMenuBar(menu);
     }
 
-    public void showEndGamePanel() {
+    private void showEndGamePanel() {
         String winner;
         if (redDotCount > blueDotCount) winner = "RED wins!";
         else if (blueDotCount > redDotCount) winner = "BLUE wins!";
@@ -78,34 +78,36 @@ public class DotsScreen extends JFrame {
         } else dispose();
     }
 
-    public int getPointNumber(int col,int row){
-        return col+row*dim;
+    private int getPointNumber(int col, int row) {
+        return col + row * dim;
     }
 
-    public void putDot(int col, int row) {
+    private void putDot(int col, int row) {
         int id = col + row * DotGameConstant.dimension;
         dots[col][row] = new Dot(id, col, row, currentColor);
         connections.addDot();
         addConnections(col, row);
         drawArea.addDotsForDraw(dots[col][row]);
-        if (currentColor == DotGameConstant.RED) redDotCount++;
-        else blueDotCount++;
-        updateLabels();
-        changeCurrentColor();
-        connections.findNewCycle(getPointNumber(col,row));
+        Captured result = connections.findNewCycle(getPointNumber(col, row));
+        if (result.size() > 0) {
+            if (result.getColor() == Color.RED) redDotCount += result.size();
+            else blueDotCount += result.size();
+        }
         for (Path p : connections.getCycles()) {
             drawArea.addPathForDraw(p);
         }
+        updateLabels();
         repaint();
+        changeCurrentColor();
     }
 
-    public void addConnections(int col, int row) {
-        int n=getPointNumber(col,row);
+    private void addConnections(int col, int row) {
+        int n = getPointNumber(col, row);
         int[] surrounded = {(0 - dim), dim, -1, 1, (-1 - dim), (1 - dim), (dim - 1), (dim + 1)};
         for (int i : surrounded) {
-            int m=n+i;
+            int m = n + i;
             try {
-                Dot dot = dots[m%dim][m/dim];
+                Dot dot = dots[m % dim][m / dim];
                 if (dot != null && dot.isAvailable && dot.getColor() == currentColor)
                     connections.addEdge(dots[col][row].id(), dot.id());
             } catch (IndexOutOfBoundsException e) {
@@ -113,13 +115,13 @@ public class DotsScreen extends JFrame {
         }
     }
 
-    public void changeCurrentColor() {
+    private void changeCurrentColor() {
         if (currentColor == DotGameConstant.RED) currentColor = DotGameConstant.BLUE;
         else currentColor = DotGameConstant.RED;
         changeColor.setBackground(currentColor);
     }
 
-    public int getColRow(int i) {
+    private int getColRow(int i) {
         return (i + DotGameConstant.gridCellSize / 2) / DotGameConstant.gridCellSize;
     }
 

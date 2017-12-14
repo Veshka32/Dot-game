@@ -1,14 +1,16 @@
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class DotGraph {
-    int total;
+    private int total;
     ArrayList<Integer>[] adj;
-    HashSet<Path> cycles = new HashSet<>();
-    int V = 0; //current vertex count
-    int E = 0;
-    Dot[][] dots;
+    private HashSet<Path> cycles = new HashSet<>();
+    private int V = 0; //current vertex count
+    private int E = 0;
+    private Dot[][] dots;
 
-    public DotGraph(int V,Dot[][] dots) {
+    DotGraph(int V,Dot[][] dots) {
         total = V;
         adj = new ArrayList[total];
         for (int i = 0; i < total; i++) {
@@ -17,7 +19,7 @@ public class DotGraph {
         this.dots=dots;
     }
 
-    public DotGraph(int V) {
+    DotGraph(int V) {
         total = V;
         adj = new ArrayList[total];
         for (int i = 0; i < total; i++) {
@@ -33,11 +35,11 @@ public class DotGraph {
         return E;
     }
 
-    public void addDot() {
+    void addDot() {
         V++;
     }
 
-    public void disableDot(int v){
+    void disableDot(int v){
         int col=v%DotGameConstant.dimension;
         int row=v/DotGameConstant.dimension;
         for (int i:adj[v]){
@@ -47,18 +49,34 @@ public class DotGraph {
         if (dots!=null) dots[col][row].disable();
     }
 
-    public void addEdge(int v, int w) {
+    private int disableInnerDots(Path p){
+        int countInnerDots=0;
+        int[] xx=p.limitX();
+        int[] yy=p.limitY();
+        for (int col=xx[0]+1; col<xx[1];col++){
+            for (int row=yy[0]+1;row<yy[1];row++){
+                Dot current=dots[col][row];
+                if (current!=null && current.getColor()!=p.getColor()&& current.isAvailable()) {
+                    countInnerDots++;
+                    disableDot(col+row*DotGameConstant.dimension);
+                }
+            }
+        }
+        return countInnerDots;
+    }
+
+    void addEdge(int v, int w) {
         adj[v].add(w);
         adj[w].add(v);
         E++;
     }
 
-    public ArrayList<Integer> getAdjacent(int v) {
+    private ArrayList<Integer> getAdjacent(int v) {
         return adj[v];
     }
 
-    public void findNewCycle(int v) {
-        if (V<4) return;
+    Captured findNewCycle(int v) {
+        if (V<4) new Captured();
         HashSet<Path> newCycles = new HashSet<>();
         ArrayDeque<Path> paths = new ArrayDeque<>();
         paths.add(new Path(new int[]{v}));
@@ -67,12 +85,10 @@ public class DotGraph {
             if (newCycles.contains(path)) continue;
             int last=path.last();
             List<Integer> adj=getAdjacent(last);
-            Collections.sort(adj, new Comparator<Integer>() {
+            Collections.sort(adj, new Comparator<>() {
                 @Override
                 public int compare(Integer o1, Integer o2) {
-                    if (manhattanDist(last, o1) < manhattanDist(last, o2)) return -1;
-                    else if (manhattanDist(last, o1) > manhattanDist(last, o2)) return 1;
-                    else return 0;
+                    return Integer.compare(manhattanDist(last, o1), manhattanDist(last, o2));
                 }
             });
             for (int w : adj) {
@@ -87,22 +103,24 @@ public class DotGraph {
                 paths.add(newPath);
             }
         }
-        if (newCycles.isEmpty()) return;
+        if (newCycles.isEmpty()) return new Captured();
         Path[] cyclesForSort= new Path[newCycles.size()];
         int i=0;
         for (Path p:newCycles)
             cyclesForSort[i++]=p;
         Arrays.sort(cyclesForSort);
-        cycles.add(cyclesForSort[cyclesForSort.length-1]);
+        Path p=cyclesForSort[cyclesForSort.length-1];
+        p.setColor(dots[p.start()%DotGameConstant.dimension][p.start()/DotGameConstant.dimension].getColor());
+        int result=disableInnerDots(p);
+        if (result>0) cycles.add(p);
+        return new Captured(p.getColor(),result);
     }
 
-
-    public Iterable<Path> getCycles() {
+    Iterable<Path> getCycles() {
         return cycles;
     }
 
-
-    public static int manhattanDist(int a, int b) {
+    private static int manhattanDist(int a, int b) {
         int col = a % DotGameConstant.dimension;
         int row = a / DotGameConstant.dimension;
         int col2 = b % DotGameConstant.dimension;
