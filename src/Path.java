@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Path implements Drawable{
@@ -7,10 +8,11 @@ public class Path implements Drawable{
     private Color color;
     private Polygon polygon;
     private Polygon polygonForDraw;
+    private ArrayList<Integer> capturedDots;
 
     Path(Path p, int last) { //path=array+int last
-        path = new int[p.size() + 1];
-        System.arraycopy(p.path, 0, path, 0, p.size());
+        path = new int[p.length() + 1];
+        System.arraycopy(p.path, 0, path, 0, p.length());
         path[path.length - 1] = last;
         this.hash = p.hashCode() ^ last * 397;
     }
@@ -19,6 +21,10 @@ public class Path implements Drawable{
         path = array;
         for (int i : path)
             hash = hash ^ i * 397;
+    }
+
+    Iterable<Integer> getCapturedDots(){
+        return capturedDots;
     }
 
     private void setPolygon(){
@@ -45,6 +51,8 @@ public class Path implements Drawable{
         this.color = color;
     }
 
+    void setCapturedDots(ArrayList<Integer> n){capturedDots=n;}
+
     Color getColor() {
         return color;
     }
@@ -53,7 +61,7 @@ public class Path implements Drawable{
         return Arrays.toString(path);
     }
 
-    int size() {
+    int length() {
         return path.length;
     }
 
