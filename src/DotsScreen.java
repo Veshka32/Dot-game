@@ -20,6 +20,7 @@ class DotsScreen extends JFrame {
         endGame.addActionListener(e -> showEndGamePanel());
         changeColor.setBackground(Color.RED);
         add(drawArea);
+        drawArea.addObjectForDraw(new DotGrid());
         drawArea.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {

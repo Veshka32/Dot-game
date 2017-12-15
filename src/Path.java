@@ -6,6 +6,7 @@ public class Path implements Drawable{
     private final int[] path;
     private Color color;
     private Polygon polygon;
+    private Polygon polygonForDraw;
 
     Path(Path p, int last) { //path=array+last
         path = new int[p.size() + 1];
@@ -23,10 +24,16 @@ public class Path implements Drawable{
     void setPolygon(){
         int[] xs = new int[path.length];
         int[] ys = new int[path.length];
+        int[] xsScaled=new int[path.length];
+        int[] ysScaled=new int[path.length];
         for (int i = 0; i < path.length; i++){
             xs[i] = path[i] % DotGameConstant.dimension;
-            ys[i] = path[i] / DotGameConstant.dimension;}
+            ys[i] = path[i] / DotGameConstant.dimension;
+            xsScaled[i] = path[i] % DotGameConstant.dimension*DotGameConstant.gridCellSize;
+            ysScaled[i] = path[i] / DotGameConstant.dimension*DotGameConstant.gridCellSize;
+        }
         polygon= new Polygon(xs,ys,path.length);
+        polygonForDraw=new Polygon(xsScaled,ysScaled,path.length);
     }
 
     boolean containsDot(int col,int row){
@@ -84,19 +91,8 @@ public class Path implements Drawable{
     @Override
     public void draw(Graphics g) {
         g.setColor(color);
-        int x, y;
-        int x1 = 0;
-        int y1 = 0;
-        for (int i = 0; i < path.length - 1; i++) {
-            x = path[i] % DotGameConstant.dimension * DotGameConstant.gridCellSize;
-            y = path[i] / DotGameConstant.dimension * DotGameConstant.gridCellSize;
-            x1 = path[i + 1] % DotGameConstant.dimension * DotGameConstant.gridCellSize;
-            y1 = path[i + 1] / DotGameConstant.dimension * DotGameConstant.gridCellSize;
-            g.drawLine(x, y, x1, y1);
-        }
-        x = path[0] % DotGameConstant.dimension * DotGameConstant.gridCellSize;
-        y = path[0] / DotGameConstant.dimension * DotGameConstant.gridCellSize;
-        g.drawLine(x, y, x1, y1);
+        if (polygonForDraw==null) setPolygon();
+        g.drawPolygon(polygonForDraw);
     }
 
     @Override
