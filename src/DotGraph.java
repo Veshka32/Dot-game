@@ -2,15 +2,13 @@ import java.util.*;
 import java.util.List;
 
 public class DotGraph {
-    private int total;
+    private int total=DotGameConstant.dimension*DotGameConstant.dimension;
     ArrayList<Integer>[] adj;
     private HashSet<Path> cycles = new HashSet<>();
-    private int V = 0; //current vertex count
-    private int E = 0;
+    private int V = 0; //count of vertexes added to gameBoard so far
     private Dot[][] dots;
 
-    DotGraph(int V, Dot[][] dots) {
-        total = V;
+    DotGraph(Dot[][] dots) {
         adj = new ArrayList[total];
         for (int i = 0; i < total; i++) {
             adj[i] = new ArrayList<>();
@@ -18,8 +16,7 @@ public class DotGraph {
         this.dots = dots;
     }
 
-    DotGraph(int V) {
-        total = V;
+    DotGraph() {
         adj = new ArrayList[total];
         for (int i = 0; i < total; i++) {
             adj[i] = new ArrayList<>();
@@ -58,7 +55,6 @@ public class DotGraph {
     void addEdge(int v, int w) {
         adj[v].add(w);
         adj[w].add(v);
-        E++;
     }
 
     private ArrayList<Integer> getAdjacent(int v) {

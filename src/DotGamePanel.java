@@ -5,11 +5,10 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 
 public class DotGamePanel extends JPanel {
-    ArrayList<Drawable> objectsForDraw=new ArrayList<>();
-    int cellSize=DotGameConstant.gridCellSize;
+    private ArrayList<Drawable> objectsForDraw=new ArrayList<>();
 
-    public DotGamePanel(){
-        setPreferredSize(new Dimension(cellSize * (DotGameConstant.dimension - 1), cellSize * (DotGameConstant.dimension - 1)));
+    DotGamePanel(){
+        setPreferredSize(new Dimension(DotGameConstant.gridCellSize * (DotGameConstant.dimension - 1), DotGameConstant.gridCellSize * (DotGameConstant.dimension - 1)));
         setBackground(Color.WHITE);
     }
 
@@ -19,7 +18,7 @@ public class DotGamePanel extends JPanel {
         for (Drawable d:objectsForDraw) d.draw(g);
     }
 
-    public void addObjectForDraw(Drawable dr){
+    void addObjectForDraw(Drawable dr){
         objectsForDraw.add(dr);
     }
 

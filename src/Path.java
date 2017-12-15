@@ -8,7 +8,7 @@ public class Path implements Drawable{
     private Polygon polygon;
     private Polygon polygonForDraw;
 
-    Path(Path p, int last) { //path=array+last
+    Path(Path p, int last) { //path=array+int last
         path = new int[p.size() + 1];
         System.arraycopy(p.path, 0, path, 0, p.size());
         path[path.length - 1] = last;
@@ -21,7 +21,7 @@ public class Path implements Drawable{
             hash = hash ^ i * 397;
     }
 
-    void setPolygon(){
+    private void setPolygon(){
         int[] xs = new int[path.length];
         int[] ys = new int[path.length];
         int[] xsScaled=new int[path.length];
@@ -29,8 +29,8 @@ public class Path implements Drawable{
         for (int i = 0; i < path.length; i++){
             xs[i] = path[i] % DotGameConstant.dimension;
             ys[i] = path[i] / DotGameConstant.dimension;
-            xsScaled[i] = path[i] % DotGameConstant.dimension*DotGameConstant.gridCellSize;
-            ysScaled[i] = path[i] / DotGameConstant.dimension*DotGameConstant.gridCellSize;
+            xsScaled[i] = xs[i]*DotGameConstant.gridCellSize;
+            ysScaled[i] = ys[i]*DotGameConstant.gridCellSize;
         }
         polygon= new Polygon(xs,ys,path.length);
         polygonForDraw=new Polygon(xsScaled,ysScaled,path.length);
@@ -91,6 +91,7 @@ public class Path implements Drawable{
     @Override
     public void draw(Graphics g) {
         g.setColor(color);
+        ((Graphics2D)g).setStroke(new BasicStroke(3.0f));
         if (polygonForDraw==null) setPolygon();
         g.drawPolygon(polygonForDraw);
     }

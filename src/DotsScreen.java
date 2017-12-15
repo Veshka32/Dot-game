@@ -5,20 +5,22 @@ import java.awt.event.MouseEvent;
 
 class DotsScreen extends JFrame {
     private DotGamePanel drawArea = new DotGamePanel();
-    private JButton changeColor = new JButton("Switch color");
+    private JLabel colorFlag = new JLabel("Switch color");
     private JButton endGame = new JButton("End game");
     private int redDotCount, blueDotCount;
-    private int dim = DotGameConstant.dimension;
     private JLabel redDots = new JLabel("Red " + redDotCount);
     private JLabel blueDots = new JLabel("Blue " + blueDotCount);
     private Color currentColor = DotGameConstant.RED;
     private Dot[][] dots = new Dot[DotGameConstant.dimension][DotGameConstant.dimension];
-    private DotGraph connections = new DotGraph(DotGameConstant.dimension * DotGameConstant.dimension, dots);
+    private DotGraph connections = new DotGraph(dots);
 
     DotsScreen() {
         setMenu();
         endGame.addActionListener(e -> showEndGamePanel());
-        changeColor.setBackground(Color.RED);
+        colorFlag.setBackground(DotGameConstant.RED);
+        colorFlag.setOpaque(true); //make label color visible
+        redDots.setForeground(DotGameConstant.RED);
+        blueDots.setForeground(DotGameConstant.BLUE);
         add(drawArea);
         drawArea.addObjectForDraw(new DotGrid());
         drawArea.addMouseListener(new MouseAdapter() {
@@ -40,7 +42,7 @@ class DotsScreen extends JFrame {
 
     private void setMenu() {
         JMenuBar menu = new JMenuBar();
-        menu.add(changeColor);
+        menu.add(colorFlag);
         menu.add(new JMenu("   "));
         menu.add(redDots);
         menu.add(new JMenu("   "));
@@ -72,14 +74,13 @@ class DotsScreen extends JFrame {
     }
 
     private void putDot(int col, int row) {
-        int id = col + row * dim;
-        dots[col][row] = new Dot(id, col, row, currentColor);
+        dots[col][row] = new Dot(col, row, currentColor);
         connections.addDot();
         addConnections(col, row);
         drawArea.addObjectForDraw(dots[col][row]);
-        CaptureResult result = connections.findNewCycle(id);
+        CaptureResult result = connections.findNewCycle(dots[col][row].id());
         if (result.size() > 0) {
-            if (result.getColor() == Color.RED) redDotCount += result.size();
+            if (result.getColor() == DotGameConstant.RED) redDotCount += result.size();
             else blueDotCount += result.size();
         }
         for (Path p : connections.getCycles()) {
@@ -108,7 +109,7 @@ class DotsScreen extends JFrame {
     private void changeCurrentColor() {
         if (currentColor == DotGameConstant.RED) currentColor = DotGameConstant.BLUE;
         else currentColor = DotGameConstant.RED;
-        changeColor.setBackground(currentColor);
+        colorFlag.setBackground(currentColor);
     }
 
     private int getColRow(int i) {
