@@ -5,6 +5,7 @@ public class Path implements Drawable{
     private int hash;
     private final int[] path;
     private Color color;
+    private Polygon polygon;
 
     Path(Path p, int last) { //path=array+last
         path = new int[p.size() + 1];
@@ -17,6 +18,20 @@ public class Path implements Drawable{
         path = array;
         for (int i : path)
             hash = hash ^ i * 397;
+    }
+
+    void setPolygon(){
+        int[] xs = new int[path.length];
+        int[] ys = new int[path.length];
+        for (int i = 0; i < path.length; i++){
+            xs[i] = path[i] % DotGameConstant.dimension;
+            ys[i] = path[i] / DotGameConstant.dimension;}
+        polygon= new Polygon(xs,ys,path.length);
+    }
+
+    boolean containsDot(int col,int row){
+        if (polygon==null) setPolygon();
+        return polygon.contains(col,row);
     }
 
     void setColor(Color color) {

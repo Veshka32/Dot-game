@@ -90,6 +90,7 @@ class DotsScreen extends JFrame {
     }
 
     private void addConnections(int col, int row) {
+        //-1,0,1 - closet dot on grid
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
                 if (i == 0 && j == 0) continue;
