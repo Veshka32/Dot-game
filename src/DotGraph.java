@@ -105,10 +105,6 @@ public class DotGraph {
         return cycles;
     }
 
-    void simplifyCycles(){
-
-    }
-
     private static int manhattanDist(int a, int b) {
         int col = a % DotGameConstant.dimension;
         int row = a / DotGameConstant.dimension;

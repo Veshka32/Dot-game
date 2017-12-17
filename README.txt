@@ -10,3 +10,4 @@ What I've learnt:
 - some experience in building my own graph, implementing cycle detecting during DFS;
 - implementing custom hash function for my own class (Path class in this case) to use it in HashSet;
 - create Comparator, overriding compareTo method, equals method;
+- you can not make custom Comparator for primitives without Wrapping :(
