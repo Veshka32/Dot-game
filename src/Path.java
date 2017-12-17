@@ -8,7 +8,6 @@ public class Path implements Drawable{
     private Color color;
     private Polygon polygon;
     private Polygon polygonForDraw;
-    private ArrayList<Integer> capturedDots;
 
     Path(Path p, int last) { //path=array+int last
         path = new int[p.length() + 1];
@@ -21,10 +20,6 @@ public class Path implements Drawable{
         path = array;
         for (int i : path)
             hash = hash ^ i * 397;
-    }
-
-    Iterable<Integer> getCapturedDots(){
-        return capturedDots;
     }
 
     private void setPolygon(){
@@ -44,14 +39,12 @@ public class Path implements Drawable{
 
     boolean containsDot(int col,int row){
         if (polygon==null) setPolygon();
-        return polygon.contains(col,row);
+        return polygon.contains(col,row) && !containsVertex(col+row*DotGameConstant.dimension);
     }
 
     void setColor(Color color) {
         this.color = color;
     }
-
-    void setCapturedDots(ArrayList<Integer> n){capturedDots=n;}
 
     Color getColor() {
         return color;
@@ -73,7 +66,7 @@ public class Path implements Drawable{
         return path[path.length - 1];
     }
 
-    boolean contains(int a) {
+    boolean containsVertex(int a) {
         for (int i : path) {
             if (i == a) return true;
         }

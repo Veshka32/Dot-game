@@ -78,7 +78,7 @@ class DotsScreen extends JFrame {
         connections.addDot();
         addConnections(col, row);
         drawArea.addObjectForDraw(dots[col][row]);
-        CaptureResult result = connections.findNewCycle(dots[col][row].id());
+        CaptureResult result = connections.findNewCycle(dots[col][row].id(),currentColor);
         if (result.size() > 0) {
             if (result.getColor() == DotGameConstant.RED) redDotCount += result.size();
             else blueDotCount += result.size();

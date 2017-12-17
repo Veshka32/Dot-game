@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -58,12 +59,13 @@ public class DotGraph {
     }
 
     private ArrayList<Integer> getAdjacent(int v) {
+        Collections.sort(adj[v], Comparator.comparingInt(o -> manhattanDist(v, o))); //remove to Path Class
         return adj[v];
     }
 
-    CaptureResult findNewCycle(int v) {
+    CaptureResult findNewCycle(int v, Color color) {
         if (V < 4) return new CaptureResult();
-        int currentMaxOfCapturedDots = 0;
+        ArrayList<Integer> currentMaxOfCapturedDots = new ArrayList<>();
         Path newCycles = null;
         ArrayDeque<Path> paths = new ArrayDeque<>();
         paths.add(new Path(new int[]{v}));
@@ -72,30 +74,30 @@ public class DotGraph {
             if (path.equals(newCycles)) continue;
             int last = path.last();
             List<Integer> adj = getAdjacent(last);
-            Collections.sort(adj, Comparator.comparingInt(o -> manhattanDist(last, o)));
             for (int w : adj) {
                 if (path.length() > 1) {
-                    if (w == path.start() && path.length() > 3 && !path.equals(newCycles)) {
+                    if (w == path.start() && path.length() > 3) {
+                        path.setColor(color);
                         ArrayList<Integer> capturedDots = findCapturedDots(path);
-                        if (capturedDots.size() > currentMaxOfCapturedDots) {
-                            path.setCapturedDots(capturedDots);
+                        if (capturedDots.size() > currentMaxOfCapturedDots.size()) {
                             newCycles = path;
-                            currentMaxOfCapturedDots = capturedDots.size();
+                            currentMaxOfCapturedDots = capturedDots;
                         }
                         continue;
                     }
-                    if (path.contains(w)) continue;
+                    if (path.containsVertex(w)) continue;
                 }
                 Path newPath = new Path(path, w);
                 paths.add(newPath);
             }
         }
-        if (currentMaxOfCapturedDots == 0) return new CaptureResult();
-        newCycles.setColor(dots[newCycles.start() % DotGameConstant.dimension][newCycles.start() / DotGameConstant.dimension].getColor());
+        if (currentMaxOfCapturedDots.isEmpty()) return new CaptureResult();
         cycles.add(newCycles);
-        for (int dot : newCycles.getCapturedDots())
+        System.out.println(newCycles.toString());
+        System.out.println("captured dots "+currentMaxOfCapturedDots.toString());
+        for (int dot : currentMaxOfCapturedDots)
             disableDot(dot);
-        return new CaptureResult(newCycles.getColor(), currentMaxOfCapturedDots);
+        return new CaptureResult(newCycles.getColor(), currentMaxOfCapturedDots.size());
     }
 
     Iterable<Path> getCycles() {
