@@ -110,4 +110,9 @@ public class Path implements Drawable{
         Path that = (Path) obj;
         return hash == that.hashCode();
     }
+
+    public int compareTo(Path o) {
+        if (o==null) return 1;
+        return Integer.compare(this.length(), o.length());
+    }
 }

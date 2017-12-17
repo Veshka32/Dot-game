@@ -79,7 +79,12 @@ public class DotGraph {
                     if (w == path.start() && path.length() > 3) {
                         path.setColor(color);
                         ArrayList<Integer> capturedDots = findCapturedDots(path);
+                        if (capturedDots.size()<1) continue;
                         if (capturedDots.size() > currentMaxOfCapturedDots.size()) {
+                            newCycles = path;
+                            currentMaxOfCapturedDots = capturedDots;
+                        }
+                        else if (capturedDots.size()==currentMaxOfCapturedDots.size() && path.compareTo(newCycles)>0){
                             newCycles = path;
                             currentMaxOfCapturedDots = capturedDots;
                         }
