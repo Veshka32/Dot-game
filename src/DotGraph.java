@@ -63,9 +63,9 @@ public class DotGraph {
         return adj[v];
     }
 
-    CaptureResult findNewCycle(int v, Color color) {
-        if (V < 4) return new CaptureResult();
-        ArrayList<Integer> currentMaxOfCapturedDots = new ArrayList<>();
+    int findNewCycle(int v, Color color) {
+        if (V < 7) return 0;
+        ArrayList<Integer> currentCapturedDots = new ArrayList<>();
         Path newCycles = null;
         ArrayDeque<Path> paths = new ArrayDeque<>();
         paths.add(new Path(new int[]{v}));
@@ -79,14 +79,10 @@ public class DotGraph {
                     if (w == path.start() && path.length() > 3) {
                         path.setColor(color);
                         ArrayList<Integer> capturedDots = findCapturedDots(path);
-                        if (capturedDots.size()<1) continue;
-                        if (capturedDots.size() > currentMaxOfCapturedDots.size()) {
+                        if (capturedDots.size() < 1) continue;
+                        if (capturedDots.size() > currentCapturedDots.size() || (capturedDots.size() == currentCapturedDots.size() && path.length()>newCycles.length())) {
                             newCycles = path;
-                            currentMaxOfCapturedDots = capturedDots;
-                        }
-                        else if (capturedDots.size()==currentMaxOfCapturedDots.size() && path.compareTo(newCycles)>0){
-                            newCycles = path;
-                            currentMaxOfCapturedDots = capturedDots;
+                            currentCapturedDots = capturedDots;
                         }
                         continue;
                     }
@@ -96,17 +92,21 @@ public class DotGraph {
                 paths.add(newPath);
             }
         }
-        if (currentMaxOfCapturedDots.isEmpty()) return new CaptureResult();
+        if (currentCapturedDots.isEmpty()) return 0;
         cycles.add(newCycles);
         System.out.println(newCycles.toString());
-        System.out.println("captured dots "+currentMaxOfCapturedDots.toString());
-        for (int dot : currentMaxOfCapturedDots)
+        System.out.println("captured dots " + currentCapturedDots.toString());
+        for (int dot : currentCapturedDots)
             disableDot(dot);
-        return new CaptureResult(newCycles.getColor(), currentMaxOfCapturedDots.size());
+        return currentCapturedDots.size();
     }
 
     Iterable<Path> getCycles() {
         return cycles;
+    }
+
+    void simplifyCycles(){
+
     }
 
     private static int manhattanDist(int a, int b) {

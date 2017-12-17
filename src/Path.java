@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Path implements Drawable{
@@ -109,10 +108,5 @@ public class Path implements Drawable{
         if (obj.getClass() != this.getClass()) return false;
         Path that = (Path) obj;
         return hash == that.hashCode();
-    }
-
-    public int compareTo(Path o) {
-        if (o==null) return 1;
-        return Integer.compare(this.length(), o.length());
     }
 }
