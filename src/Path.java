@@ -98,7 +98,7 @@ public class Path implements Drawable{
         int max=-1;
         for (int i:xs){
             if (i<min) min=i;
-            else if (i>max) max=i;
+            if (i>max) max=i;
         }
         return new int[]{min,max};
     }
@@ -109,7 +109,7 @@ public class Path implements Drawable{
         int max=-1;
         for (int i:ys){
             if (i<min) min=i;
-            else if (i>max) max=i;
+            if (i>max) max=i;
         }
         return new int[]{min,max};
     }
