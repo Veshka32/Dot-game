@@ -79,7 +79,7 @@ class DotsScreen extends JFrame {
         connections.addDot();
         addConnections(col, row);
         drawArea.addObjectForDraw(dots[col][row]);
-        int result = connections.findNewCycle(dots[col][row].id(),currentColor);
+        int result = connections.findNewCycle(dots[col][row].id(), currentColor);
         if (result > 0) {
             if (currentColor == DotGameConstant.RED) redDotCount += result;
             else blueDotCount += result;
@@ -93,13 +93,11 @@ class DotsScreen extends JFrame {
         //-1,0,1 - closet dot on grid
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
-                if (i == 0 && j == 0) continue;
-                try {
-                    Dot dot = dots[col + i][row + j];
-                    if (dot != null && dot.isAvailable && dot.getColor() == currentColor)
-                        connections.addEdge(dots[col][row].id(), dot.id());
-                } catch (IndexOutOfBoundsException e) {
-                }
+                if (i == 0 && j == 0 || col + i < 0 || col + i > DotGameConstant.dimension || row + j < 0 || row + j > DotGameConstant.dimension)
+                    continue;
+                Dot dot = dots[col + i][row + j];
+                if (dot != null && dot.isAvailable && dot.getColor() == currentColor)
+                    connections.addEdge(dots[col][row].id(), dot.id());
             }
         }
     }

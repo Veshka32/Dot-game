@@ -11,3 +11,6 @@ What I've learnt:
 - implementing custom hash function for my own class (Path class in this case) to use it in HashSet;
 - create Comparator, overriding compareTo method, equals method;
 - you can not make custom Comparator for primitives without Wrapping :(
+
+An interesting way to find whether a polygon strongly contains point https://stackoverflow.com/questions/42968171/how-to-determine-if-a-grid-cell-is-within-an-enclosed-perimeter-of-cells
+
