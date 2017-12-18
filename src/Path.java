@@ -4,6 +4,7 @@ import java.util.Arrays;
 public class Path implements Drawable{
     private int hash;
     final int[] path;
+    double area;
     private Color color;
     Polygon polygon;
 
@@ -40,6 +41,17 @@ public class Path implements Drawable{
 
     Color getColor() {
         return color;
+    }
+
+    double getArea(){ //B.X*A.Y - A.X*B.Y
+        if (area!=0.0) return area;
+        double sum = 0.0;
+        for (int i = 0; i < path.length-1; i++) {
+            sum = sum + (path[i+1]%DotGameConstant.dimension * path[i]/DotGameConstant.dimension) - (path[i]%DotGameConstant.dimension * path[i+1]/DotGameConstant.dimension);
+        }
+        sum+=(path[0]%DotGameConstant.dimension * path[path.length-1]/DotGameConstant.dimension) - (path[path.length-1]%DotGameConstant.dimension * path[0]/DotGameConstant.dimension);
+        area=Math.abs(0.5 * sum);
+        return area;
     }
 
     public String toString() {

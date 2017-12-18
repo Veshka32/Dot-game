@@ -65,22 +65,22 @@ public class DotGraph {
 
     int findNewCycle(int v, Color color) {
         if (V < 7) return 0;
-        ArrayList<Integer> currentCapturedDots = new ArrayList<>();
+        ArrayList<Integer> currentCapturedDots = new ArrayList<>(); //to list
         Path newCycles = null;
         ArrayDeque<Path> paths = new ArrayDeque<>();
         paths.add(new Path(new int[]{v}));
         while (!paths.isEmpty()) {
             Path path = paths.pop();
-            if (path.equals(newCycles)) continue;
+            if (path.equals(newCycles) || cycles.contains(path)) continue;
             int last = path.last();
             List<Integer> adj = getAdjacent(last);
             for (int w : adj) {
                 if (path.length() > 1) {
-                    if (w == path.start() && path.length() > 3) {
+                    if (path.length() > 3 && w == path.start()) {
                         path.setColor(color);
                         ArrayList<Integer> capturedDots = findCapturedDots(path);
                         if (capturedDots.size() < 1) continue;
-                        if (capturedDots.size() > currentCapturedDots.size() || (capturedDots.size() == currentCapturedDots.size() && path.length()>newCycles.length())) {
+                        if (capturedDots.size() > currentCapturedDots.size() || (capturedDots.size() == currentCapturedDots.size() && path.getArea() > newCycles.getArea())) {
                             newCycles = path;
                             currentCapturedDots = capturedDots;
                         }
