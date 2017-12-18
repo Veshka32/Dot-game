@@ -4,9 +4,10 @@ import java.util.Arrays;
 public class Path implements Drawable{
     private int hash;
     final int[] path;
+    int xs[];
+    int ys[];
     double area;
     private Color color;
-    Polygon polygon;
 
     Path(Path p, int last) { //path=array+int last
         path = new int[p.length() + 1];
@@ -21,31 +22,27 @@ public class Path implements Drawable{
             hash = hash ^ i * 397;
     }
 
-    private void setPolygon(){
-        int[] xs = new int[path.length];
-        int[] ys = new int[path.length];
-        for (int i = 0; i < path.length; i++){
-            xs[i] = path[i] % DotGameConstant.dimension;
-            ys[i] = path[i] / DotGameConstant.dimension;}
-        polygon= new Polygon(xs,ys,path.length);
-    }
-
-    boolean containsDot(int col,int row){
-        if (polygon==null) setPolygon();
-        return polygon.contains(col,row) && !containsVertex(col+row*DotGameConstant.dimension);
+    private void setXsYs(){
+        xs=new int[path.length];
+        ys=new int[path.length];
+        for (int i = 0; i < path.length; i++) {
+            xs[i]=path[i]%DotGameConstant.dimension;
+            ys[i]=path[i]/DotGameConstant.dimension;
+        }
     }
 
     boolean containsDot2(int col,int row){
+        if (xs==null) setXsYs();
         int crossings = 0;
         for (int i = 0; i < path.length; i++) {
-            if (col==i%DotGameConstant.dimension && row==i/DotGameConstant.dimension) return false; //point is on boundary;
+            if (col==xs[i] && row==ys[i]) return false; //point is on boundary;
             int j = i + 1;
             if (i+1==path.length) j=0;
-            boolean cond1 = (path[i]/DotGameConstant.dimension <= row) && (row < path[j]/DotGameConstant.dimension);
-            boolean cond2 = (path[j]/DotGameConstant.dimension <= row) && (row < path[i]/DotGameConstant.dimension);
+            boolean cond1 = (ys[i]<= row) && (row < ys[j]);
+            boolean cond2 = (ys[j] <= row) && (row < ys[i]);
             if (cond1 || cond2) {
                 // need to cast to double
-                if (col < (path[j]%DotGameConstant.dimension - path[i]%DotGameConstant.dimension) * (row - path[i]/DotGameConstant.dimension) / (path[j]/DotGameConstant.dimension - path[i]/DotGameConstant.dimension) + path[i]%DotGameConstant.dimension)
+                if (col < (xs[j] - xs[i]) * (row - ys[i]) / (ys[j] - ys[i]) + xs[i])
                     crossings++;
             }
         }
@@ -62,12 +59,13 @@ public class Path implements Drawable{
     }
 
     double getArea(){ //B.X*A.Y - A.X*B.Y
-        if (area!=0.0) return area;
+        if (xs==null) setXsYs();
+        if (area>0.0) return area;
         double sum = 0.0;
         for (int i = 0; i < path.length-1; i++) {
-            sum = sum + (path[i+1]%DotGameConstant.dimension * path[i]/DotGameConstant.dimension) - (path[i]%DotGameConstant.dimension * path[i+1]/DotGameConstant.dimension);
+            sum = sum + (xs[i+1]* ys[i]) - (xs[i]* ys[i+1]);
         }
-        sum+=(path[0]%DotGameConstant.dimension * path[path.length-1]/DotGameConstant.dimension) - (path[path.length-1]%DotGameConstant.dimension * path[0]/DotGameConstant.dimension);
+        sum+=(xs[0] * ys[ys.length-1]) - (xs[xs.length-1]* ys[0]);
         area=Math.abs(0.5 * sum);
         return area;
     }
@@ -96,36 +94,37 @@ public class Path implements Drawable{
     }
 
     int[] limitX() {
-        int[] xs = new int[path.length];
-        for (int i = 0; i < path.length; i++)
-            xs[i] = path[i] % DotGameConstant.dimension;
-        Arrays.sort(xs);
-        return new int[]{xs[0], xs[xs.length - 1]};
+        if (xs==null) setXsYs();
+        int[] sorted=new int[xs.length];
+        System.arraycopy(xs,0,sorted,0,xs.length);
+        Arrays.sort(sorted);
+        return new int[]{sorted[0], sorted[sorted.length - 1]};
     }
 
     int[] limitY() {
-        int[] ys = new int[path.length];
-        for (int i = 0; i < path.length; i++)
-            ys[i] = path[i] / DotGameConstant.dimension;
-        Arrays.sort(ys);
-        return new int[]{ys[0], ys[ys.length - 1]};
+        if (xs==null) setXsYs();
+        int[] sorted = new int[ys.length];
+        System.arraycopy(ys,0,sorted,0,ys.length);
+        Arrays.sort(sorted);
+        return new int[]{sorted[0], sorted[sorted.length - 1]};
     }
 
     @Override
     public void draw(Graphics g) {
+        if (xs==null) setXsYs();
         g.setColor(color);
         int x, y;
         int x1 = 0;
         int y1 = 0;
         for (int i = 0; i < path.length - 1; i++) {
-            x = path[i] % DotGameConstant.dimension * DotGameConstant.gridCellSize;
-            y = path[i] / DotGameConstant.dimension * DotGameConstant.gridCellSize;
-            x1 = path[i + 1] % DotGameConstant.dimension * DotGameConstant.gridCellSize;
-            y1 = path[i + 1] / DotGameConstant.dimension * DotGameConstant.gridCellSize;
+            x = xs[i]* DotGameConstant.gridCellSize;
+            y = ys[i] * DotGameConstant.gridCellSize;
+            x1 = xs[i + 1] * DotGameConstant.gridCellSize;
+            y1 = ys[i + 1] * DotGameConstant.gridCellSize;
             g.drawLine(x, y, x1, y1);
         }
-        x = path[0] % DotGameConstant.dimension * DotGameConstant.gridCellSize;
-        y = path[0] / DotGameConstant.dimension * DotGameConstant.gridCellSize;
+        x = xs[0] * DotGameConstant.gridCellSize;
+        y = ys[0] * DotGameConstant.gridCellSize;
         g.drawLine(x, y, x1, y1);
     }
 
