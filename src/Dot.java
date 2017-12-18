@@ -16,7 +16,7 @@ public class Dot implements Drawable {
     public void draw(Graphics g) {
         g.setColor(color);
         g.fillOval(x - DotGameConstant.dotSize / 2, y - DotGameConstant.dotSize / 2, DotGameConstant.dotSize, DotGameConstant.dotSize);
-        g.drawString("" + id(), x, y);
+        if (isAvailable) g.drawString("" + id(), x, y);
     }
 
     Color getColor() {

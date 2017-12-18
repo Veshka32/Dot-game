@@ -2,7 +2,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class DotGraph implements Drawable{
+public class DotGraph implements Drawable {
     private int total = DotGameConstant.dimension * DotGameConstant.dimension;
     ArrayList<Integer>[] adj;
     private HashSet<Path> cycles = new HashSet<>();
@@ -38,15 +38,16 @@ public class DotGraph implements Drawable{
         if (dots != null) dots[col][row].disable();
     }
 
-    private ArrayList<Integer> findCapturedDots(Path p) {
-        ArrayList<Integer> innerDots = new ArrayList<>();
+    private ArrayList<Integer>[] findInnerDots(Path p) {
+        ArrayList<Integer>[] innerDots = new ArrayList[]{new ArrayList(), new ArrayList()}; //[0] - opposite color,[1] - same color
         int[] xx = p.limitX();
         int[] yy = p.limitY();
         for (int col = xx[0] + 1; col < xx[1]; col++) {
             for (int row = yy[0] + 1; row < yy[1]; row++) {
                 Dot current = dots[col][row];
-                if (current != null && p.containsDot2(col, row) && current.getColor() != p.getColor() && current.isAvailable()) {
-                    innerDots.add(current.id());
+                if (current != null && p.containsDot2(col, row) && current.isAvailable()) {
+                    if (current.getColor() != p.getColor()) innerDots[0].add(current.id());
+                    else innerDots[1].add(current.id());
                 }
             }
         }
@@ -65,7 +66,7 @@ public class DotGraph implements Drawable{
 
     int findNewCycle(int v, Color color) {
         if (V < 7) return 0;
-        ArrayList<Integer> currentCapturedDots = new ArrayList<>(); //to list
+        ArrayList<Integer>[] innerDotsSoFar = new ArrayList[]{new ArrayList(), new ArrayList()}; //to list
         Path newCycles = null;
         ArrayDeque<Path> paths = new ArrayDeque<>();
         paths.add(new Path(new int[]{v}));
@@ -78,11 +79,11 @@ public class DotGraph implements Drawable{
                 if (path.length() > 1) {
                     if (path.length() > 3 && w == path.start()) {
                         path.setColor(color);
-                        ArrayList<Integer> capturedDots = findCapturedDots(path);
-                        if (capturedDots.size() < 1) continue;
-                        if (capturedDots.size() > currentCapturedDots.size() || (capturedDots.size() == currentCapturedDots.size() && path.getArea() > newCycles.getArea())) {
+                        ArrayList<Integer>[] capturedDots = findInnerDots(path);
+                        if (capturedDots[0].size() < 1) continue;
+                        if (capturedDots[0].size() > innerDotsSoFar[0].size() || (capturedDots[0].size() == innerDotsSoFar[0].size() && path.getArea() > newCycles.getArea())) {
                             newCycles = path;
-                            currentCapturedDots = capturedDots;
+                            innerDotsSoFar = capturedDots;
                         }
                         continue;
                     }
@@ -92,13 +93,12 @@ public class DotGraph implements Drawable{
                 paths.add(newPath);
             }
         }
-        if (currentCapturedDots.isEmpty()) return 0;
+        if (innerDotsSoFar[0].isEmpty()) return 0;
         cycles.add(newCycles);
-        System.out.println(newCycles.toString());
-        System.out.println("captured dots " + currentCapturedDots.toString());
-        for (int dot : currentCapturedDots)
-            disableDot(dot);
-        return currentCapturedDots.size();
+        for (ArrayList<Integer> array : innerDotsSoFar)
+            for (int i : array)
+                disableDot(i);
+        return innerDotsSoFar[0].size();
     }
 
     private static int manhattanDist(int a, int b) {
@@ -111,8 +111,8 @@ public class DotGraph implements Drawable{
 
     @Override
     public void draw(Graphics g) {
-        ((Graphics2D)g).setStroke(new BasicStroke(3.0f));
-        for (Path p:cycles)
+        ((Graphics2D) g).setStroke(new BasicStroke(3.0f));
+        for (Path p : cycles)
             p.draw(g);
     }
 }
