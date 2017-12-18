@@ -17,6 +17,7 @@ public class Path implements Drawable {
     }
 
     Path(int[] array) {
+        if (array==null) throw new IllegalArgumentException();
         path = array;
         for (int i : path)
             hash = hash ^ i * 397;
