@@ -15,7 +15,6 @@ public class Dot implements Drawable {
     @Override
     public void draw(Graphics g) {
         g.setColor(color);
-        ((Graphics2D)g).setStroke(new BasicStroke(3.0f));
         g.fillOval(x - DotGameConstant.dotSize / 2, y - DotGameConstant.dotSize / 2, DotGameConstant.dotSize, DotGameConstant.dotSize);
         g.drawString("" + id(), x, y);
     }

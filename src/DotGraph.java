@@ -2,7 +2,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class DotGraph {
+public class DotGraph implements Drawable{
     private int total = DotGameConstant.dimension * DotGameConstant.dimension;
     ArrayList<Integer>[] adj;
     private HashSet<Path> cycles = new HashSet<>();
@@ -113,4 +113,10 @@ public class DotGraph {
         return Math.abs(col - col2) + Math.abs(row - row2);
     }
 
+    @Override
+    public void draw(Graphics g) {
+        ((Graphics2D)g).setStroke(new BasicStroke(3.0f));
+        for (Path p:cycles)
+            p.draw(g);
+    }
 }

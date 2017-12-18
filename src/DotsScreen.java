@@ -23,6 +23,7 @@ class DotsScreen extends JFrame {
         blueDots.setForeground(DotGameConstant.BLUE);
         add(drawArea);
         drawArea.addObjectForDraw(new DotGrid());
+        drawArea.addObjectForDraw(connections);
         drawArea.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -82,9 +83,6 @@ class DotsScreen extends JFrame {
         if (result > 0) {
             if (currentColor == DotGameConstant.RED) redDotCount += result;
             else blueDotCount += result;
-        }
-        for (Path p : connections.getCycles()) {
-            drawArea.addObjectForDraw(p);
         }
         updateLabels();
         repaint();
