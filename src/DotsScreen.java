@@ -87,16 +87,20 @@ class DotsScreen extends JFrame {
         updateLabels();
         repaint();
         changeCurrentColor();
+        if (connections.isFull()) showEndGamePanel();
     }
 
     private void addConnections(int col, int row) {
         //-1,0,1 - closet dot on grid
         for (int i = -1; i < 2; i++) {
             for (int j = -1; j < 2; j++) {
-                if (i == 0 && j == 0 || col + i < 0 || col + i > DotGameConstant.dimension || row + j < 0 || row + j > DotGameConstant.dimension)
+                if ((i == 0 && j == 0)) {
                     continue;
+                } else if (col + i < 0 || col + i > DotGameConstant.dimension || row + j < 0 || row + j > DotGameConstant.dimension) {
+                    continue;
+                }
                 Dot dot = dots[col + i][row + j];
-                if (dot != null && dot.isAvailable && dot.getColor() == currentColor)
+                if (dot != null && dot.notCaptured && dot.getColor() == currentColor)
                     connections.addEdge(dots[col][row].id(), dot.id());
             }
         }

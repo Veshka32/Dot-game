@@ -4,7 +4,7 @@ public class Dot implements Drawable {
     private int x;
     private int y;
     private Color color;
-    boolean isAvailable = true;
+    boolean notCaptured = true;
 
     Dot(int col, int row, Color color) {
         this.x = col * DotGameConstant.gridCellSize;
@@ -16,19 +16,19 @@ public class Dot implements Drawable {
     public void draw(Graphics g) {
         g.setColor(color);
         g.fillOval(x - DotGameConstant.dotSize / 2, y - DotGameConstant.dotSize / 2, DotGameConstant.dotSize, DotGameConstant.dotSize);
-        if (isAvailable) g.drawString("" + id(), x, y);
+        if (notCaptured) g.drawString("" + id(), x, y);
     }
 
     Color getColor() {
         return color;
     }
 
-    boolean isAvailable() {
-        return isAvailable;
+    boolean isNotCaptured() {
+        return notCaptured;
     }
 
-    void disable() {
-        isAvailable = false;
+    void capture() {
+        notCaptured = false;
     }
 
     int id() {

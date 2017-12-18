@@ -13,6 +13,8 @@ What I've learnt:
 - first steps in using Junit Tests;
 - you can not make custom Comparator for primitives without Wrapping :(
 - not handle exception is a bad practice;
+- to delete from collection while iterating: use {new Iterator(); if condition Iterator.remove(//without argument)
+  or Collection.removeIf(var - > condition)
 
 An interesting way to find whether a polygon strongly contains point https://stackoverflow.com/questions/42968171/how-to-determine-if-a-grid-cell-is-within-an-enclosed-perimeter-of-cells
 

@@ -28,6 +28,10 @@ public class DotGraph implements Drawable {
         V++;
     }
 
+    boolean isFull(){
+        return V==total;
+    }
+
     void disableDot(int v) {
         int col = v % DotGameConstant.dimension;
         int row = v / DotGameConstant.dimension;
@@ -35,7 +39,7 @@ public class DotGraph implements Drawable {
             adj[i].remove((Integer) v);
         }
         adj[v].clear();
-        if (dots != null) dots[col][row].disable();
+        if (dots != null) dots[col][row].capture();
     }
 
     private ArrayList<Integer>[] findInnerDots(Path p) {
@@ -45,7 +49,7 @@ public class DotGraph implements Drawable {
         for (int col = xx[0] + 1; col < xx[1]; col++) {
             for (int row = yy[0] + 1; row < yy[1]; row++) {
                 Dot current = dots[col][row];
-                if (current != null && p.containsDot2(col, row) && current.isAvailable()) {
+                if (current != null && p.containsDot2(col, row) && current.isNotCaptured()) {
                     if (current.getColor() != p.getColor()) innerDots[0].add(current.id());
                     else {if (!p.containsVertex(current.id())) innerDots[1].add(current.id());} //if color the same, it might be boundary point
                 }
@@ -94,11 +98,16 @@ public class DotGraph implements Drawable {
             }
         }
         if (innerDotsSoFar[0].isEmpty()) return 0;
+        simplifyCycles(newCycles);
         cycles.add(newCycles);
         for (ArrayList<Integer> array : innerDotsSoFar)
             for (int i : array)
                 disableDot(i);
         return innerDotsSoFar[0].size();
+    }
+
+    private void simplifyCycles(Path newPath){
+        cycles.removeIf(old -> old.getColor() == newPath.getColor() && newPath.hasCommonVertex(old)); //analog Iterator.remove()
     }
 
     private static int manhattanDist(int a, int b) {
