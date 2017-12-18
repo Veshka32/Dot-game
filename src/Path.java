@@ -3,10 +3,10 @@ import java.util.Arrays;
 
 public class Path implements Drawable{
     private int hash;
-    final int[] path;
-    int xs[];
-    int ys[];
-    double area;
+    private final int[] path;
+    private int xs[];
+    private int ys[];
+    private double area;
     private Color color;
 
     Path(Path p, int last) { //path=array+int last
@@ -46,8 +46,7 @@ public class Path implements Drawable{
                     crossings++;
             }
         }
-        if (crossings % 2 == 1) return true;
-        else                    return false;
+        return crossings % 2 == 1;
     }
 
     void setColor(Color color) {
@@ -95,18 +94,24 @@ public class Path implements Drawable{
 
     int[] limitX() {
         if (xs==null) setXsYs();
-        int[] sorted=new int[xs.length];
-        System.arraycopy(xs,0,sorted,0,xs.length);
-        Arrays.sort(sorted);
-        return new int[]{sorted[0], sorted[sorted.length - 1]};
+        int min=DotGameConstant.dimension*DotGameConstant.dimension+2;
+        int max=-1;
+        for (int i:xs){
+            if (i<min) min=i;
+            else if (i>max) max=i;
+        }
+        return new int[]{min,max};
     }
 
     int[] limitY() {
         if (xs==null) setXsYs();
-        int[] sorted = new int[ys.length];
-        System.arraycopy(ys,0,sorted,0,ys.length);
-        Arrays.sort(sorted);
-        return new int[]{sorted[0], sorted[sorted.length - 1]};
+        int min=DotGameConstant.dimension*DotGameConstant.dimension+2;
+        int max=-1;
+        for (int i:ys){
+            if (i<min) min=i;
+            else if (i>max) max=i;
+        }
+        return new int[]{min,max};
     }
 
     @Override
