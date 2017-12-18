@@ -35,6 +35,24 @@ public class Path implements Drawable{
         return polygon.contains(col,row) && !containsVertex(col+row*DotGameConstant.dimension);
     }
 
+    boolean containsDot2(int col,int row){
+        int crossings = 0;
+        for (int i = 0; i < path.length; i++) {
+            if (col==i%DotGameConstant.dimension && row==i/DotGameConstant.dimension) return false; //point is on boundary;
+            int j = i + 1;
+            if (i+1==path.length) j=0;
+            boolean cond1 = (path[i]/DotGameConstant.dimension <= row) && (row < path[j]/DotGameConstant.dimension);
+            boolean cond2 = (path[j]/DotGameConstant.dimension <= row) && (row < path[i]/DotGameConstant.dimension);
+            if (cond1 || cond2) {
+                // need to cast to double
+                if (col < (path[j]%DotGameConstant.dimension - path[i]%DotGameConstant.dimension) * (row - path[i]/DotGameConstant.dimension) / (path[j]/DotGameConstant.dimension - path[i]/DotGameConstant.dimension) + path[i]%DotGameConstant.dimension)
+                    crossings++;
+            }
+        }
+        if (crossings % 2 == 1) return true;
+        else                    return false;
+    }
+
     void setColor(Color color) {
         this.color = color;
     }

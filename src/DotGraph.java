@@ -45,7 +45,7 @@ public class DotGraph {
         for (int col = xx[0] + 1; col < xx[1]; col++) {
             for (int row = yy[0] + 1; row < yy[1]; row++) {
                 Dot current = dots[col][row];
-                if (current != null && p.containsDot(col, row) && current.getColor() != p.getColor() && current.isAvailable()) {
+                if (current != null && p.containsDot2(col, row) && current.getColor() != p.getColor() && current.isAvailable()) {
                     innerDots.add(current.id());
                 }
             }
