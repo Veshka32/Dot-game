@@ -47,7 +47,7 @@ public class DotGraph implements Drawable {
                 Dot current = dots[col][row];
                 if (current != null && p.containsDot2(col, row) && current.isAvailable()) {
                     if (current.getColor() != p.getColor()) innerDots[0].add(current.id());
-                    else innerDots[1].add(current.id());
+                    else {if (!p.containsVertex(current.id())) innerDots[1].add(current.id());} //if color the same, it might be boundary point
                 }
             }
         }

@@ -10,7 +10,9 @@ What I've learnt:
 - some experience in building my own graph, implementing cycle detecting during DFS;
 - implementing custom hash function for my own class (Path class in this case) to use it in HashSet;
 - create Comparator, overriding compareTo method, equals method;
+- first steps in using Junit Tests;
 - you can not make custom Comparator for primitives without Wrapping :(
+- not handle exception is a bad practice;
 
 An interesting way to find whether a polygon strongly contains point https://stackoverflow.com/questions/42968171/how-to-determine-if-a-grid-cell-is-within-an-enclosed-perimeter-of-cells
 

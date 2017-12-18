@@ -35,7 +35,6 @@ public class Path implements Drawable{
         if (xs==null) setXsYs();
         int crossings = 0;
         for (int i = 0; i < path.length; i++) {
-            if (col==xs[i] && row==ys[i]) return false; //point is on boundary;
             int j = i + 1;
             if (i+1==path.length) j=0;
             boolean cond1 = (ys[i]<= row) && (row < ys[j]);
