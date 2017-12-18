@@ -101,10 +101,6 @@ public class DotGraph implements Drawable{
         return currentCapturedDots.size();
     }
 
-    Iterable<Path> getCycles() {
-        return cycles;
-    }
-
     private static int manhattanDist(int a, int b) {
         int col = a % DotGameConstant.dimension;
         int row = a / DotGameConstant.dimension;
