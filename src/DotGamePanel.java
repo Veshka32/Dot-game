@@ -22,5 +22,7 @@ public class DotGamePanel extends JPanel {
         objectsForDraw.add(dr);
     }
 
+    void clear(){objectsForDraw.clear();}
+
 
 }

@@ -69,8 +69,18 @@ class DotsScreen extends JFrame {
                 options,  //the titles of buttons
                 options[0]); //default button title
         if (n == 0) {
-            dispose();
-            new DotsScreen();
+            redDotCount=0;
+            blueDotCount=0;
+            currentColor = DotGameConstant.RED;
+            colorFlag.setBackground(DotGameConstant.RED);
+            updateLabels();
+            dots = new Dot[DotGameConstant.dimension][DotGameConstant.dimension];
+            connections=new DotGraph(dots);
+            drawArea.clear();
+            drawArea.addObjectForDraw(new DotGrid());
+            drawArea.addObjectForDraw(connections);
+            repaint();
+            revalidate();
         } else dispose();
     }
 
