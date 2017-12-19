@@ -11,6 +11,7 @@ What I've learnt:
 - implementing custom hash function for my own class (Path class in this case) to use it in HashSet;
 - create Comparator, overriding compareTo method, equals method;
 - first steps in using Junit Tests;
+- how to create .jar file;
 - you can not make custom Comparator for primitives without Wrapping :(
 - not handle exception is a bad practice;
 - to delete from collection while iterating: use {new Iterator(); if condition Iterator.remove(//without argument)

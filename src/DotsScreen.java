@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 
 class DotsScreen extends JFrame {
     private DotGamePanel drawArea = new DotGamePanel();
+    JPanel emptyPanel=new JPanel();
     private JLabel colorFlag = new JLabel("Switch color");
     private JButton endGame = new JButton("End game");
     private int redDotCount, blueDotCount;
@@ -16,13 +17,14 @@ class DotsScreen extends JFrame {
 
     DotsScreen() {
         setMenu();
+        add(emptyPanel); //to make a space between drawArea and JFrame
+        emptyPanel.add(drawArea);
         endGame.addActionListener(e -> showEndGamePanel());
         colorFlag.setBackground(DotGameConstant.RED);
         colorFlag.setOpaque(true); //make label color visible
         redDots.setForeground(DotGameConstant.RED);
         blueDots.setForeground(DotGameConstant.BLUE);
         //setSize(DotGameConstant.gridCellSize * (DotGameConstant.dimension - 1)+10,DotGameConstant.gridCellSize * (DotGameConstant.dimension - 1)+10);
-        add(drawArea);
         drawArea.addObjectForDraw(new DotGrid());
         drawArea.addObjectForDraw(connections);
         drawArea.addMouseListener(new MouseAdapter() {
