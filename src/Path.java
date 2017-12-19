@@ -92,7 +92,7 @@ public class Path implements Drawable {
         return false;
     }
 
-    boolean hasCommonVertex(Path p) { // p - shortest path
+    boolean hasCommonVertex(Path p) { // @p - shorter path
         int count = 0;
         for (int i : p.path)
             if (containsVertex(i)) {
