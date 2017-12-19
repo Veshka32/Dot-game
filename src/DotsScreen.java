@@ -21,6 +21,7 @@ class DotsScreen extends JFrame {
         colorFlag.setOpaque(true); //make label color visible
         redDots.setForeground(DotGameConstant.RED);
         blueDots.setForeground(DotGameConstant.BLUE);
+        //setSize(DotGameConstant.gridCellSize * (DotGameConstant.dimension - 1)+10,DotGameConstant.gridCellSize * (DotGameConstant.dimension - 1)+10);
         add(drawArea);
         drawArea.addObjectForDraw(new DotGrid());
         drawArea.addObjectForDraw(connections);
@@ -106,7 +107,7 @@ class DotsScreen extends JFrame {
             for (int j = -1; j < 2; j++) {
                 if ((i == 0 && j == 0)) {
                     continue;
-                } else if (col + i < 0 || col + i > DotGameConstant.dimension || row + j < 0 || row + j > DotGameConstant.dimension) {
+                } else if (col + i < 0 || col + i > DotGameConstant.dimension-1 || row + j < 0 || row + j > DotGameConstant.dimension-1) {
                     continue;
                 }
                 Dot dot = dots[col + i][row + j];
