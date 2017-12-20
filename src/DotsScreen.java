@@ -87,7 +87,7 @@ class DotsScreen extends JFrame {
         } else dispose();
     }
 
-    private void putDot(int col, int row) {
+    void putDot(int col, int row) {
         dots[col][row] = new Dot(col, row, currentColor);
         connections.addDot();
         addConnections(col, row);
