@@ -8,6 +8,7 @@ public class DotGraph implements Drawable {
     private HashSet<Path> cycles = new HashSet<>();
     private int V = 0; //count of vertexes added to gameBoard so far
     private Dot[][] dots;
+    HashSet<Path> badCycles=new HashSet<>();
 
     DotGraph(Dot[][] dots) {
         adj = new ArrayList[total];
@@ -45,9 +46,9 @@ public class DotGraph implements Drawable {
     private ArrayList<Integer>[] findInnerDots(Path p) {
         ArrayList<Integer>[] innerDots = new ArrayList[]{new ArrayList(), new ArrayList()}; //[0] - opposite color,[1] - same color
         int[] xx = p.limitX();
-        if (Math.abs(xx[0]-xx[1])==1) return innerDots;
+        if (Math.abs(xx[0]-xx[1])==1) {badCycles.add(p);return innerDots;}
         int[] yy = p.limitY();
-        if (Math.abs(xx[0]-xx[1])==1) return innerDots;
+        if (Math.abs(xx[0]-xx[1])==1) {badCycles.add(p);return innerDots;}
         for (int col = xx[0] + 1; col < xx[1]; col++) {
             for (int row = yy[0] + 1; row < yy[1]; row++) {
                 Dot current = dots[col][row];
@@ -75,11 +76,11 @@ public class DotGraph implements Drawable {
         ArrayList<Integer>[] innerDotsSoFar = new ArrayList[]{new ArrayList(), new ArrayList()};
         Path newCycle = null;
         ArrayDeque<Path> paths = new ArrayDeque<>();
-        HashSet<Path> badCycles=new HashSet<>();
+        HashSet<Path> tempBadCycles=new HashSet<>();
         paths.add(new Path(new int[]{v}));
         while (!paths.isEmpty()) {
             Path path = paths.pop();
-            if (badCycles.contains(path) || path.equals(newCycle) || cycles.contains(path)) continue;
+            if (tempBadCycles.contains(path) || badCycles.contains(path)|| path.equals(newCycle) || cycles.contains(path)) continue;
             int last = path.last();
             List<Integer> adj = getAdjacent(last);
             for (int w : adj) {
@@ -88,13 +89,13 @@ public class DotGraph implements Drawable {
                         path.setColor(color);
                         ArrayList<Integer>[] capturedDots = findInnerDots(path);
                         if (capturedDots[0].size() < 1) {
-                            badCycles.add(path);
+                            tempBadCycles.add(path);
                             continue;}
                         if (capturedDots[0].size() > innerDotsSoFar[0].size() || (capturedDots[0].size() == innerDotsSoFar[0].size() && path.getArea() > newCycle.getArea())) {
                             newCycle = path;
                             innerDotsSoFar = capturedDots;
                         }
-                        else badCycles.add(path);
+                        else tempBadCycles.add(path);
                         continue;
                     }
                     if (path.containsVertex(w)) continue;
