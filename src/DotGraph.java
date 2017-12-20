@@ -75,10 +75,11 @@ public class DotGraph implements Drawable {
         ArrayList<Integer>[] innerDotsSoFar = new ArrayList[]{new ArrayList(), new ArrayList()};
         Path newCycle = null;
         ArrayDeque<Path> paths = new ArrayDeque<>();
+        HashSet<Path> badCycles=new HashSet<>();
         paths.add(new Path(new int[]{v}));
         while (!paths.isEmpty()) {
             Path path = paths.pop();
-            if (path.equals(newCycle) || cycles.contains(path)) continue;
+            if (badCycles.contains(path) || path.equals(newCycle) || cycles.contains(path)) continue;
             int last = path.last();
             List<Integer> adj = getAdjacent(last);
             for (int w : adj) {
@@ -86,11 +87,14 @@ public class DotGraph implements Drawable {
                     if (path.length() > 3 && w == path.start()) {
                         path.setColor(color);
                         ArrayList<Integer>[] capturedDots = findInnerDots(path);
-                        if (capturedDots[0].size() < 1) continue;
+                        if (capturedDots[0].size() < 1) {
+                            badCycles.add(path);
+                            continue;}
                         if (capturedDots[0].size() > innerDotsSoFar[0].size() || (capturedDots[0].size() == innerDotsSoFar[0].size() && path.getArea() > newCycle.getArea())) {
                             newCycle = path;
                             innerDotsSoFar = capturedDots;
                         }
+                        else badCycles.add(path);
                         continue;
                     }
                     if (path.containsVertex(w)) continue;
