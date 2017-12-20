@@ -45,7 +45,9 @@ public class DotGraph implements Drawable {
     private ArrayList<Integer>[] findInnerDots(Path p) {
         ArrayList<Integer>[] innerDots = new ArrayList[]{new ArrayList(), new ArrayList()}; //[0] - opposite color,[1] - same color
         int[] xx = p.limitX();
+        if (Math.abs(xx[0]-xx[1])==1) return innerDots;
         int[] yy = p.limitY();
+        if (Math.abs(xx[0]-xx[1])==1) return innerDots;
         for (int col = xx[0] + 1; col < xx[1]; col++) {
             for (int row = yy[0] + 1; row < yy[1]; row++) {
                 Dot current = dots[col][row];
