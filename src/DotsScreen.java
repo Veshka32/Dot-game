@@ -17,7 +17,8 @@ class DotsScreen extends JFrame {
 
     DotsScreen() {
         setMenu();
-        add(emptyPanel); //to make a space between drawArea and JFrame
+        add(emptyPanel);
+        emptyPanel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20)); //add space between border and content elements;
         emptyPanel.add(drawArea);
         endGame.addActionListener(e -> showEndGamePanel());
         colorFlag.setBackground(DotGameConstant.RED);

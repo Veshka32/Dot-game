@@ -66,19 +66,19 @@ public class DotGraph implements Drawable {
     }
 
     private ArrayList<Integer> getAdjacent(int v) {
-        Collections.sort(adj[v], Comparator.comparingInt(o -> manhattanDist(v, o))); //remove to Path Class
+        Collections.sort(adj[v], Comparator.comparingInt(o -> manhattanDist(v, o)));
         return adj[v];
     }
 
     int findNewCycle(int v, Color color) {
         if (V < 7) return 0;
-        ArrayList<Integer>[] innerDotsSoFar = new ArrayList[]{new ArrayList(), new ArrayList()}; //to list
-        Path newCycles = null;
+        ArrayList<Integer>[] innerDotsSoFar = new ArrayList[]{new ArrayList(), new ArrayList()};
+        Path newCycle = null;
         ArrayDeque<Path> paths = new ArrayDeque<>();
         paths.add(new Path(new int[]{v}));
         while (!paths.isEmpty()) {
             Path path = paths.pop();
-            if (path.equals(newCycles) || cycles.contains(path)) continue;
+            if (path.equals(newCycle) || cycles.contains(path)) continue;
             int last = path.last();
             List<Integer> adj = getAdjacent(last);
             for (int w : adj) {
@@ -87,8 +87,8 @@ public class DotGraph implements Drawable {
                         path.setColor(color);
                         ArrayList<Integer>[] capturedDots = findInnerDots(path);
                         if (capturedDots[0].size() < 1) continue;
-                        if (capturedDots[0].size() > innerDotsSoFar[0].size() || (capturedDots[0].size() == innerDotsSoFar[0].size() && path.getArea() > newCycles.getArea())) {
-                            newCycles = path;
+                        if (capturedDots[0].size() > innerDotsSoFar[0].size() || (capturedDots[0].size() == innerDotsSoFar[0].size() && path.getArea() > newCycle.getArea())) {
+                            newCycle = path;
                             innerDotsSoFar = capturedDots;
                         }
                         continue;
@@ -100,8 +100,8 @@ public class DotGraph implements Drawable {
             }
         }
         if (innerDotsSoFar[0].isEmpty()) return 0;
-        simplifyCycles(newCycles);
-        cycles.add(newCycles);
+        simplifyCycles(newCycle);
+        cycles.add(newCycle);
         for (ArrayList<Integer> array : innerDotsSoFar)
             for (int i : array)
                 disableDot(i);
