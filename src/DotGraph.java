@@ -1,8 +1,9 @@
 import java.awt.*;
+import java.io.Serializable;
 import java.util.*;
 import java.util.List;
 
-public class DotGraph implements Drawable {
+public class DotGraph implements Drawable,Serializable {
     private int total = DotGameConstant.dimension * DotGameConstant.dimension;
     ArrayList<Integer>[] adj;
     private HashSet<Path> cycles = new HashSet<>();

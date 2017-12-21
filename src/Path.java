@@ -1,7 +1,8 @@
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class Path implements Drawable {
+public class Path implements Drawable,Serializable {
     private int hash;
     private final int[] path;
     private int xs[];

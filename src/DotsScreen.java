@@ -2,8 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.Serializable;
 
-class DotsScreen {
+class DotsScreen implements Serializable {
     JFrame frame;
     private DotGamePanel drawArea = new DotGamePanel();
     private JLabel colorFlag = new JLabel("Switch color");

@@ -1,6 +1,7 @@
 import java.awt.*;
+import java.io.Serializable;
 
-public class Dot implements Drawable {
+public class Dot implements Drawable,Serializable {
     private int x;
     private int y;
     private Color color;
