@@ -52,13 +52,13 @@ class DotsScreen implements Serializable {
         menu.add(redDots);
         menu.add(new JMenu("   "));
         menu.add(blueDots);
-        menu.add(new JMenu("   "));
+        menu.add(new JMenu(" | "));
         menu.add(endGame);
         menu.add(new JMenu("   "));
-        JButton save=new JButton("Save");
+        JButton save=new JButton("Save game");
         save.addActionListener(e->save());
         menu.add(save);
-        JButton load=new JButton("Load");
+        JButton load=new JButton("Load game");
         load.addActionListener(e->load());
         menu.add(load);
         frame.setJMenuBar(menu);
@@ -66,33 +66,37 @@ class DotsScreen implements Serializable {
 
     void save(){
         try{
-        FileOutputStream file=new FileOutputStream("Lastgame.ser");
+        FileOutputStream file=new FileOutputStream("LastGame.ser");
             ObjectOutputStream os=new ObjectOutputStream(file);
             os.writeObject(this);
     } catch (Exception ex){ex.printStackTrace();}}
 
     void load(){
         try{
-            FileInputStream file=new FileInputStream("Lastgame.ser");
+            FileInputStream file=new FileInputStream("LastGame.ser");
             ObjectInputStream os=new ObjectInputStream(file);
             DotsScreen saver=(DotsScreen) os.readObject();
-            redDotCount=saver.redDotCount;
-            blueDotCount=saver.blueDotCount;
-            currentColor=saver.currentColor;
-            dots=saver.dots;
-            connections=saver.connections;
-
-            colorFlag.setBackground(currentColor);
-            updateLabels();
-            drawArea.clear();
-            drawArea.addObjectForDraw(new DotGrid());
-            drawArea.addObjectForDraw(connections);
+            resetGameField(saver.redDotCount,saver.blueDotCount,saver.currentColor,saver.dots,saver.connections);
             for (Dot[] array:dots)
                 for (Dot d:array){
                 if (d!=null) drawArea.addObjectForDraw(d);
                 }
-            frame.repaint();
         } catch (Exception ex){ex.printStackTrace();}
+    }
+
+    private void resetGameField(int redDot,int blueDot,Color color,Dot[][] dot,DotGraph graph){
+        redDotCount=redDot;
+        blueDotCount=blueDot;
+        currentColor=color;
+        dots=dot;
+        connections=graph;
+
+        colorFlag.setBackground(currentColor);
+        updateLabels();
+        drawArea.clear();
+        drawArea.addObjectForDraw(new DotGrid());
+        drawArea.addObjectForDraw(connections);
+        frame.repaint();
     }
 
     private void showEndGamePanel() {
@@ -111,17 +115,7 @@ class DotsScreen implements Serializable {
                 options,  //the titles of buttons
                 options[0]); //default button title
         if (n == 0) {
-            redDotCount=0;
-            blueDotCount=0;
-            currentColor = DotGameConstant.RED;
-            colorFlag.setBackground(DotGameConstant.RED);
-            updateLabels();
-            dots = new Dot[DotGameConstant.dimension][DotGameConstant.dimension];
-            connections=new DotGraph(dots);
-            drawArea.clear();
-            drawArea.addObjectForDraw(new DotGrid());
-            drawArea.addObjectForDraw(connections);
-            frame.repaint();
+            resetGameField(0,0,DotGameConstant.RED,new Dot[DotGameConstant.dimension][DotGameConstant.dimension],new DotGraph(dots));
         } else frame.dispose();
     }
 
