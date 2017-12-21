@@ -132,7 +132,7 @@ class DotsScreen implements Serializable {
         drawArea.addObjectForDraw(dots[col][row]);
         int result = connections.findNewCycle(dots[col][row].id(), currentColor);
         if (result > 0) {
-            if (currentColor == DotGameConstant.RED) redDotCount += result;
+            if (currentColor.equals(DotGameConstant.RED)) redDotCount += result;
             else blueDotCount += result;
         }
         updateLabels();
@@ -151,14 +151,14 @@ class DotsScreen implements Serializable {
                     continue;
                 }
                 Dot dot = dots[col + i][row + j];
-                if (dot != null && dot.notCaptured && dot.getColor() == currentColor)
+                if (dot != null && dot.notCaptured && dot.getColor().equals(currentColor))
                     connections.addEdge(dots[col][row].id(), dot.id());
             }
         }
     }
 
     private void changeCurrentColor() {
-        if (currentColor == DotGameConstant.RED) currentColor = DotGameConstant.BLUE;
+        if (currentColor.equals(DotGameConstant.RED)) currentColor = DotGameConstant.BLUE;
         else currentColor = DotGameConstant.RED;
         colorFlag.setBackground(currentColor);
     }

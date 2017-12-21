@@ -54,7 +54,7 @@ public class DotGraph implements Drawable,Serializable {
             for (int row = yy[0] + 1; row < yy[1]; row++) {
                 Dot current = dots[col][row];
                 if (current != null && current.isNotCaptured() && p.containsDot2(col, row)) {
-                    if (current.getColor() != p.getColor()) innerDots[0].add(current.id());
+                    if (!current.getColor().equals(p.getColor())) innerDots[0].add(current.id());
                     else {if (!p.containsVertex(current.id())) innerDots[1].add(current.id());} //if color the same, it might be boundary point
                 }
             }
@@ -115,7 +115,7 @@ public class DotGraph implements Drawable,Serializable {
     }
 
     private void simplifyCycles(Path newPath){
-        cycles.removeIf(old -> old.getColor() == newPath.getColor() && newPath.hasCommonVertex(old)); //analog Iterator.remove()
+        cycles.removeIf(old -> old.getColor().equals(newPath.getColor()) && newPath.hasCommonVertex(old)); //analog Iterator.remove()
     }
 
     private static int manhattanDist(int a, int b) {
