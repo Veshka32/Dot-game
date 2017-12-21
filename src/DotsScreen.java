@@ -27,8 +27,6 @@ class DotsScreen implements Serializable {
         colorFlag.setOpaque(true); //make label color visible
         redDots.setForeground(DotGameConstant.RED);
         blueDots.setForeground(DotGameConstant.BLUE);
-        //setSize(DotGameConstant.gridCellSize * (DotGameConstant.dimension - 1)+10,DotGameConstant.gridCellSize * (DotGameConstant.dimension - 1)+10);
-        drawArea.addObjectForDraw(new DotGrid());
         drawArea.addObjectForDraw(connections);
         drawArea.addMouseListener(new MouseAdapter() {
             @Override
@@ -94,7 +92,6 @@ class DotsScreen implements Serializable {
         colorFlag.setBackground(currentColor);
         updateLabels();
         drawArea.clear();
-        drawArea.addObjectForDraw(new DotGrid());
         drawArea.addObjectForDraw(connections);
         frame.repaint();
     }
