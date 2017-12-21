@@ -2,22 +2,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.Serializable;
+import java.io.*;
 
 class DotsScreen implements Serializable {
-    JFrame frame;
-    private DotGamePanel drawArea = new DotGamePanel();
-    private JLabel colorFlag = new JLabel("Switch color");
-    private JButton endGame = new JButton("End game");
+    transient JFrame frame=new JFrame();
+    transient private DotGamePanel drawArea = new DotGamePanel();
+    transient private JLabel colorFlag = new JLabel("Switch color");
+    transient private JButton endGame = new JButton("End game");
     private int redDotCount, blueDotCount;
-    private JLabel redDots = new JLabel("Red " + redDotCount);
-    private JLabel blueDots = new JLabel("Blue " + blueDotCount);
+    transient private JLabel redDots = new JLabel("Red " + redDotCount);
+    transient private JLabel blueDots = new JLabel("Blue " + blueDotCount);
     private Color currentColor = DotGameConstant.RED;
     private Dot[][] dots = new Dot[DotGameConstant.dimension][DotGameConstant.dimension];
     private DotGraph connections = new DotGraph(dots);
 
     public void buildGUI(){
-        frame=new JFrame();
         setMenu();
         JPanel emptyPanel=new JPanel();
         frame.add(emptyPanel);
@@ -66,11 +65,34 @@ class DotsScreen implements Serializable {
     }
 
     void save(){
-
-    }
+        try{
+        FileOutputStream file=new FileOutputStream("Lastgame.ser");
+            ObjectOutputStream os=new ObjectOutputStream(file);
+            os.writeObject(this);
+    } catch (Exception ex){ex.printStackTrace();}}
 
     void load(){
-        
+        try{
+            FileInputStream file=new FileInputStream("Lastgame.ser");
+            ObjectInputStream os=new ObjectInputStream(file);
+            DotsScreen saver=(DotsScreen) os.readObject();
+            redDotCount=saver.redDotCount;
+            blueDotCount=saver.blueDotCount;
+            currentColor=saver.currentColor;
+            dots=saver.dots;
+            connections=saver.connections;
+
+            colorFlag.setBackground(currentColor);
+            updateLabels();
+            drawArea.clear();
+            drawArea.addObjectForDraw(new DotGrid());
+            drawArea.addObjectForDraw(connections);
+            for (Dot[] array:dots)
+                for (Dot d:array){
+                if (d!=null) drawArea.addObjectForDraw(d);
+                }
+            frame.repaint();
+        } catch (Exception ex){ex.printStackTrace();}
     }
 
     private void showEndGamePanel() {
