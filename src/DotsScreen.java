@@ -3,9 +3,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-class DotsScreen extends JFrame {
+class DotsScreen {
+    JFrame frame;
     private DotGamePanel drawArea = new DotGamePanel();
-    JPanel emptyPanel=new JPanel();
     private JLabel colorFlag = new JLabel("Switch color");
     private JButton endGame = new JButton("End game");
     private int redDotCount, blueDotCount;
@@ -15,9 +15,11 @@ class DotsScreen extends JFrame {
     private Dot[][] dots = new Dot[DotGameConstant.dimension][DotGameConstant.dimension];
     private DotGraph connections = new DotGraph(dots);
 
-    DotsScreen() {
+    public void buildGUI(){
+        frame=new JFrame();
         setMenu();
-        add(emptyPanel);
+        JPanel emptyPanel=new JPanel();
+        frame.add(emptyPanel);
         emptyPanel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20)); //add space between border and content elements;
         emptyPanel.add(drawArea);
         endGame.addActionListener(e -> showEndGamePanel());
@@ -36,13 +38,11 @@ class DotsScreen extends JFrame {
                 if (dots[col][row] == null) putDot(col, row);
             }
         });
-        setResizable(false);
-        setTitle("Dots Game");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //stop execute code when user close frame window;
-        pack(); //organize panels, sizes
-        setVisible(true);
-        repaint();
-        revalidate();
+        frame.setResizable(false);
+        frame.setTitle("Dots Game");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //stop execute code when user close frame window;
+        frame.pack(); //organize panels, sizes
+        frame.setVisible(true);
     }
 
     private void setMenu() {
@@ -54,7 +54,7 @@ class DotsScreen extends JFrame {
         menu.add(blueDots);
         menu.add(new JMenu("   "));
         menu.add(endGame);
-        setJMenuBar(menu);
+        frame.setJMenuBar(menu);
     }
 
     private void showEndGamePanel() {
@@ -64,7 +64,7 @@ class DotsScreen extends JFrame {
         else winner = "Draw";
         Object[] options = {"New Game",
                 "Exit"};
-        int n = JOptionPane.showOptionDialog(this,
+        int n = JOptionPane.showOptionDialog(frame,
                 winner,
                 "",
                 JOptionPane.YES_NO_OPTION,
@@ -83,9 +83,8 @@ class DotsScreen extends JFrame {
             drawArea.clear();
             drawArea.addObjectForDraw(new DotGrid());
             drawArea.addObjectForDraw(connections);
-            repaint();
-            revalidate();
-        } else dispose();
+            frame.repaint();
+        } else frame.dispose();
     }
 
     void putDot(int col, int row) {
@@ -99,7 +98,7 @@ class DotsScreen extends JFrame {
             else blueDotCount += result;
         }
         updateLabels();
-        repaint();
+        frame.repaint();
         changeCurrentColor();
         if (connections.isFull()) showEndGamePanel();
     }
