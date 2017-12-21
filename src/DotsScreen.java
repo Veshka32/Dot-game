@@ -54,7 +54,22 @@ class DotsScreen {
         menu.add(blueDots);
         menu.add(new JMenu("   "));
         menu.add(endGame);
+        menu.add(new JMenu("   "));
+        JButton save=new JButton("Save");
+        save.addActionListener(e->save());
+        menu.add(save);
+        JButton load=new JButton("Load");
+        load.addActionListener(e->load());
+        menu.add(load);
         frame.setJMenuBar(menu);
+    }
+
+    void save(){
+
+    }
+
+    void load(){
+        
     }
 
     private void showEndGamePanel() {
