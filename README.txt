@@ -4,11 +4,11 @@ Players only put dots on a field by mouse click. A polygon is built automaticall
 
 Each dot is a vertex of an undirected graph. Auto-building polygons is implemented by finding cycles in that graph. While detecting cycles during DFS, adjacent vertexes for each vertex is sorted by manhattan distance from this vertex: this need to be done to avoid edges self-crossing.
 
-Grid side and opposite colors can be set in DotGameConstant class.
+Grid side and opposite colors can be set in com.DotGame.DotGameConstant class.
 
 What I've learnt:
 - some experience in building my own graph, implementing cycle detecting during DFS;
-- implementing custom hash function for my own class (Path class in this case) to use it in HashSet;
+- implementing custom hash function for my own class (com.DotGame.Path class in this case) to use it in HashSet;
 - create Comparator, overriding compareTo method, equals method;
 - first steps in using Junit Tests;
 - how to create .jar file;

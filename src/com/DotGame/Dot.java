@@ -1,3 +1,5 @@
+package com.DotGame;
+
 import java.awt.*;
 import java.io.Serializable;
 
@@ -17,7 +19,7 @@ public class Dot implements Drawable,Serializable {
     public void draw(Graphics g) {
         g.setColor(color);
         g.fillOval(x - DotGameConstant.dotSize / 2, y - DotGameConstant.dotSize / 2, DotGameConstant.dotSize, DotGameConstant.dotSize);
-        if (notCaptured) g.drawString("" + id(), x, y);
+        //if (notCaptured) g.drawString("" + id(), x, y);
     }
 
     Color getColor() {

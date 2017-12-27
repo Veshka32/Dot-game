@@ -1,3 +1,5 @@
+package com.DotGame;
+
 import java.awt.*;
 
 public class DotGrid implements Drawable {
